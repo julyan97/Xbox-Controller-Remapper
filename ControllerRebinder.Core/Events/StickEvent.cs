@@ -60,12 +60,6 @@ namespace ControllerRebinder.Core.Events
             // Task.Run((Action)ActivateOrDeactivatedEevnt);
         }
 
-        private void ActivateOrDeactivatedEevnt()
-        {
-
-
-        }
-
     }
 
 }

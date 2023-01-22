@@ -12,16 +12,11 @@ namespace ConsoleApp2
     {
         static async Task Main(string[] args)
         {
-            //var controller = new XboxControllerWASDBinder2();
+            var controller = new XboxControllerWASDBinderBeta();
 
-            //await controller.BindStickToWASD();
             Start:
             try
             {
-                var controller = new XboxControllerWASDBinderBeta();
-                int horizontalRange = 21688;
-                int verticalRange = 19457;
-
                 await controller.BindStickToWASD();
             }
             catch
