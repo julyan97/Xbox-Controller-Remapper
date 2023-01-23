@@ -8,6 +8,11 @@ using WindowsInput.Native;
 
 namespace ControllerRebinder.Common.Moddels
 {
+    /// <summary>
+    /// ZoneRanges Reprezents a specific zone in an Quadrant Upper, Middle, Lower
+    /// Each Zone Holds its ZoneCalctulationType wich tells us how we need to calculate where we are and its own Buttons 
+    /// we need to click to recreate the movement for the zone
+    /// </summary>
     public class ZoneRange : IEquatable<ZoneRange>
     {
 

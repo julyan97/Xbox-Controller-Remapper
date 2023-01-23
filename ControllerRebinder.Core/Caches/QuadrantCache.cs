@@ -19,6 +19,12 @@ namespace ControllerRebinder.Core.Caches
 
         public static Dictionary<Quadrant, List<ZoneRange>> Quadrants { get; set; }
 
+
+        /// <summary>
+        /// The Init method caches hte information about eache Quadrant and its zones att the start of the application
+        /// so we can move between them. Each Quadrant has the Zones and eaches zone needs to be calculated diffrently 
+        /// thats why we use the ZoneCalctulationType enum to indicate the calculation type.
+        /// </summary>
         public static void Init()
         {
             Quadrants = new Dictionary<Quadrant, List<ZoneRange>>();

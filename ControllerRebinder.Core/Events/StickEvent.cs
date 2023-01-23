@@ -55,7 +55,7 @@ namespace ControllerRebinder.Core.Events
         public void Start()
         {
             var controller = new XboxControllerBinder();
-            controller.BindStickToWASD();
+            controller.Start();
             // Task.Run((Action)ActivateOrDeactivatedEevnt);
         }
 

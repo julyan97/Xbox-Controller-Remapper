@@ -29,7 +29,7 @@ namespace ControllerRebinder.Core
         private bool _didQuadrantChange = false;
 
         private const int _maxValController = 32_767;
-        private const int DeadZone = 21815;
+        private const int DeadZone = 21_815;
 
         public XboxControllerBinder()
         {
@@ -37,7 +37,7 @@ namespace ControllerRebinder.Core
             _inputSimulator = new InputSimulator();
         }
 
-        public async Task BindStickToWASD(int threshold = 21_815)
+        public async Task Start()
         {
             QuadrantCache.Init();
 
@@ -49,7 +49,7 @@ namespace ControllerRebinder.Core
                 var leftStickY = state.Gamepad.LeftThumbY;
 
 
-                await Run(threshold, leftStickX, leftStickY);
+                await Run(DeadZone, leftStickX, leftStickY);
 
                 await Task.Delay(10);
 
@@ -67,8 +67,36 @@ namespace ControllerRebinder.Core
                 out StaticYArea,
                 out currentXArea);//use to determin position in the quadrant
 
+            List<ZoneRange> zones = InitCurrentZonezForQuadrant(currentXArea);
 
+            Console.WriteLine($"Zones:  {_currentZone.Left},{_currentZone.Right} :  {_prevZone.Left},{_prevZone.Right}");
 
+            if(Math.Abs(leftStickX) <= DeadZone && Math.Abs(leftStickY) <= DeadZone)
+            {
+                await ButtonHelper.ReleaseButtons(_prevZone.Buttons);
+                Console.WriteLine(true);
+            }
+            else
+            {
+                if(_didQuadrantChange || _didZoneChange)
+                {
+                    var toРeslease = _prevZone.Buttons.Where(x => !_currentZone.Buttons.Contains(x)).ToList();
+                    await ButtonHelper.ReleaseButtons(toРeslease);
+                    _didZoneChange = false;
+                    _didQuadrantChange = false;
+                }
+                else
+                {
+                    await ButtonHelper.PressButtons(_currentZone.Buttons);
+                }
+            }
+            //QuadrantChange ZoneChange
+            DetectQuadrantChange(leftStickX, leftStickY);
+            DetectZoneChange(currentXArea, zones);
+        }
+
+        private List<ZoneRange> InitCurrentZonezForQuadrant(double currentXArea)
+        {
             List<ZoneRange> zones = QuadrantCache.Quadrants[_currentQuadrant];
             if(InitZones)
             {
@@ -78,33 +106,12 @@ namespace ControllerRebinder.Core
                 InitZones = false;
             }
 
-
-            Console.WriteLine($"Zones:  {_currentZone.Left},{_currentZone.Right} :  {_prevZone.Left},{_prevZone.Right}");
-
-            if(Math.Abs(leftStickX) <= DeadZone && Math.Abs(leftStickY) <= DeadZone)
-            {
-                await ReleaseButtons(_prevZone.Buttons);
-                Console.WriteLine(true);
-            }
-            else
-            {
-                if(_didQuadrantChange || _didZoneChange)
-                {
-                    var toРeslease = _prevZone.Buttons.Where(x => !_currentZone.Buttons.Contains(x)).ToList();
-                    await ReleaseButtons(toРeslease);
-                    _didZoneChange = false;
-                    _didQuadrantChange = false;
-                }
-                else
-                {
-                    await PressButtons(_currentZone.Buttons);
-                }
-            }
-            //QuadrantChange ZoneChange
-            DetectQuadrantChange(leftStickX, leftStickY);
-            DetectZoneChange(currentXArea, zones);
+            return zones;
         }
 
+        /// <summary>
+        /// Keep track of the previous and current zone and if it changes _didZoneChange will become true 
+        /// </summary>
         private void DetectZoneChange(double currentXArea, List<ZoneRange> zones)
         {
             var tempZone = QuadrantHelper.WhereAmI(zones, currentXArea);
@@ -116,6 +123,9 @@ namespace ControllerRebinder.Core
             }
         }
 
+        /// <summary>
+        /// Keep track of the previous and current zone and if it changes _didQuadrantChange will become true 
+        /// </summary>
         private void DetectQuadrantChange(int leftStickX, int leftStickY)
         {
             var tempQuadrant = QuadrantHelper.WhereAmI(leftStickX, leftStickY);
@@ -124,36 +134,6 @@ namespace ControllerRebinder.Core
                 _prevQuadrant = _currentQuadrant;
                 _currentQuadrant = tempQuadrant;
                 _didQuadrantChange = true;
-            }
-        }
-
-        private async Task ReleaseKeys()
-        {
-            foreach(var ranges in QuadrantCache.Quadrants.Values)
-            {
-                foreach(var range in ranges)
-                {
-                    foreach(var button in range.Buttons)
-                    {
-                        await Task.Run(() => _inputSimulator.Keyboard.KeyUp(button));
-                    }
-                }
-            }
-        }
-
-        private async Task PressButtons(List<VirtualKeyCode> buttons)
-        {
-            foreach(var button in buttons)
-            {
-                await Task.Run(() => _inputSimulator.Keyboard.KeyDown(button));
-            }
-        }
-
-        private async Task ReleaseButtons(List<VirtualKeyCode> buttons)
-        {
-            foreach(var button in buttons)
-            {
-                await Task.Run(() => _inputSimulator.Keyboard.KeyUp(button));
             }
         }
 

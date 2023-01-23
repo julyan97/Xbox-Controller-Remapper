@@ -12,17 +12,8 @@ namespace ConsoleApp2
     {
         static async Task Main(string[] args)
         {
-            var controller = new XboxControllerBinder();
-
-            Start:
-            try
-            {
-                await controller.BindStickToWASD();
-            }
-            catch
-            {
-                goto Start;
-            }
+            var controllerRebinder = new XboxControllerBinder();
+            await controllerRebinder.Start();
 
         }
     }
