@@ -10,6 +10,7 @@ using ControllerRebinder.Core.Helpers;
 using ControllerRebinder.Core.Enumerations;
 using ControllerRebinder.Core.Caches;
 using ControllerRebinder.Common.Moddels;
+using ControllerRebinder.Common.Moddels.Configurations;
 
 namespace ControllerRebinder.Core
 {
@@ -17,6 +18,7 @@ namespace ControllerRebinder.Core
     {
         private Controller _controller;
         private InputSimulator _inputSimulator;
+        private Configurations _configuration;
 
         private Quadrant _currentQuadrant = Quadrant.TopLeft;
         private Quadrant _prevQuadrant = Quadrant.TopLeft;
@@ -28,19 +30,20 @@ namespace ControllerRebinder.Core
         private bool _didZoneChange = false;
         private bool _didQuadrantChange = false;
 
-        private const int _maxValController = 32_767;
-        private const int DeadZone = 21_815;
 
         public XboxControllerBinder()
         {
+            ConfigCache.Init();
+            QuadrantCache.Init();
+            
             _controller = new Controller(UserIndex.One);
             _inputSimulator = new InputSimulator();
+
+            _configuration = ConfigCache.Configurations;
         }
 
         public async Task Start()
         {
-            QuadrantCache.Init();
-
             while(true)
             {
                 Console.WriteLine($"Quadrantrs:  {_currentQuadrant} : {_prevQuadrant}");
@@ -48,8 +51,7 @@ namespace ControllerRebinder.Core
                 var leftStickX = state.Gamepad.LeftThumbX;
                 var leftStickY = state.Gamepad.LeftThumbY;
 
-
-                await Run(DeadZone, leftStickX, leftStickY);
+                await Run(_configuration.LeftJoyStick.DeadZone, leftStickX, leftStickY);
 
                 await Task.Delay(10);
 
@@ -71,7 +73,7 @@ namespace ControllerRebinder.Core
 
             Console.WriteLine($"Zones:  {_currentZone.Left},{_currentZone.Right} :  {_prevZone.Left},{_prevZone.Right}");
 
-            if(Math.Abs(leftStickX) <= DeadZone && Math.Abs(leftStickY) <= DeadZone)
+            if(Math.Abs(leftStickX) <= _configuration.LeftJoyStick.DeadZone && Math.Abs(leftStickY) <= _configuration.LeftJoyStick.DeadZone)
             {
                 await ButtonHelper.ReleaseButtons(_prevZone.Buttons);
                 Console.WriteLine(true);
@@ -140,7 +142,7 @@ namespace ControllerRebinder.Core
         private void ExtractCurrentAndStaticAreaOfStick(int threshold, int leftStickX, int leftStickY, out double StaticYAngle, out double StaticYArea, out double currentXArea)
         {
 
-            FiнdArea(threshold, _maxValController, _maxValController, out StaticYAngle, out StaticYArea);
+            FiнdArea(threshold, _configuration.LeftJoyStick.MaxValController, _configuration.LeftJoyStick.MaxValController, out StaticYAngle, out StaticYArea);
             FiнdArea(threshold, Math.Abs(leftStickX), Math.Abs(leftStickY), out double CurrenrtAngle, out currentXArea);
 
 

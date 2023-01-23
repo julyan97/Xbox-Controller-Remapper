@@ -14,7 +14,7 @@ namespace ControllerRebinder.Core.Helpers
         public static InputSimulator _inputSimulator { get; set; } = new InputSimulator();
 
 
-        public static async Task ReleaseKeys()
+        public static async Task ReleaseKeysInQuadrantCache()
         {
             foreach(var ranges in QuadrantCache.Quadrants.Values)
             {
