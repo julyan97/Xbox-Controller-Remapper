@@ -294,6 +294,50 @@ namespace ControllerRebinder.Core
             angle = angle * (180 / Math.PI);
             area = (angle / 360) * Math.PI * Math.Pow(threshold, 2);
         }
+
+        public async Task Original(int threshold = 21_815)
+        {
+            while(true)
+            {
+                var state = _controller.GetState();
+                var leftStickX = state.Gamepad.LeftThumbX;
+                var leftStickY = state.Gamepad.LeftThumbY;
+
+                Console.WriteLine($"{leftStickX} : {leftStickY}");
+
+                // Check left stick movement on the X axis
+                if(leftStickX > threshold)
+                {
+                    _inputSimulator.Keyboard.KeyDown(VirtualKeyCode.VK_D);
+                }
+                else if(leftStickX < -threshold)
+                {
+                    _inputSimulator.Keyboard.KeyDown(VirtualKeyCode.VK_A);
+                }
+                else
+                {
+                    _inputSimulator.Keyboard.KeyUp(VirtualKeyCode.VK_D);
+                    _inputSimulator.Keyboard.KeyUp(VirtualKeyCode.VK_A);
+                }
+                // Check left stick movement on the Y axis
+                if(leftStickY > threshold)
+                {
+                    _inputSimulator.Keyboard.KeyDown(VirtualKeyCode.VK_W);
+                }
+                else if(leftStickY < -threshold)
+                {
+                    _inputSimulator.Keyboard.KeyDown(VirtualKeyCode.VK_S);
+                }
+                else
+                {
+                    _inputSimulator.Keyboard.KeyUp(VirtualKeyCode.VK_W);
+                    _inputSimulator.Keyboard.KeyUp(VirtualKeyCode.VK_S);
+                }
+
+
+                await Task.Delay(10);
+            }
+        }
     }
 }
 
