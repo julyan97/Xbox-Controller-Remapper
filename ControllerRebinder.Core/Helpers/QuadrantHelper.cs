@@ -1,10 +1,10 @@
-﻿using ControllerRebinder.Core.Enumerations;
+﻿using ControllerRebinder.Common.Moddels;
+using ControllerRebinder.Core.Enumerations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Range = ControllerRebinder.Core.Caches.Range;
 
 namespace ControllerRebinder.Core.Helpers
 {
@@ -12,7 +12,7 @@ namespace ControllerRebinder.Core.Helpers
     {
         public static Quadrant WhereAmI(int LeftStickX, int LeftStickY)
         {
-            if(LeftStickX < 0 && LeftStickY > 0)
+            if(LeftStickX <= 0 && LeftStickY > 0)
             {
                 return Quadrant.TopLeft;
             }
@@ -20,11 +20,11 @@ namespace ControllerRebinder.Core.Helpers
             {
                 return Quadrant.TopRight;
             }
-            else if(LeftStickX < 0 && LeftStickY < 0)
+            else if(LeftStickX <= 0 && LeftStickY < 0)
             {
                 return Quadrant.BottomLeft;
             }
-            else if(LeftStickX > 0 && LeftStickY < 0)
+            else if(LeftStickX > 0 && LeftStickY <= 0)
             {
                 return Quadrant.BottomRight;
             }
@@ -33,7 +33,7 @@ namespace ControllerRebinder.Core.Helpers
         }
 
 
-        public static Range WhereAmI(List<Range> ranges, double _currentXArea)
+        public static ZoneRange WhereAmI(List<ZoneRange> ranges, double _currentXArea)
         {
             foreach(var range in ranges)
             {

@@ -6,7 +6,6 @@ using System.Linq;
 using System.Numerics;
 using System.Threading.Tasks;
 using WindowsInput.Native;
-using Range = ControllerRebinder.Core.Caches.Range;
 
 namespace ControllerRebinder.Core.Events
 {

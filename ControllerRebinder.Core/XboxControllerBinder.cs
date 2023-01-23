@@ -9,29 +9,26 @@ using WindowsInput;
 using ControllerRebinder.Core.Helpers;
 using ControllerRebinder.Core.Enumerations;
 using ControllerRebinder.Core.Caches;
-using Range = ControllerRebinder.Core.Caches.Range;
+using ControllerRebinder.Common.Moddels;
 
 namespace ControllerRebinder.Core
 {
     public class XboxControllerBinder
     {
         private Controller _controller;
-        private State _previousState;
         private InputSimulator _inputSimulator;
 
         private Quadrant _currentQuadrant = Quadrant.TopLeft;
         private Quadrant _prevQuadrant = Quadrant.TopLeft;
 
-        private Range _currentZone;
-        private Range _prevZone;
+        private ZoneRange _currentZone;
+        private ZoneRange _prevZone;
         private bool InitZones = true;
 
         private bool _didZoneChange = false;
         private bool _didQuadrantChange = false;
 
         private const int _maxValController = 32_767;
-        private const double TopDownRange = 256639706.25628203;
-        private const double LeftRightRange = 206639706.25628203;
         private const int DeadZone = 21815;
 
         public XboxControllerBinder()
@@ -72,7 +69,7 @@ namespace ControllerRebinder.Core
 
 
 
-            List<Range> zones = QuadrantCache.Quadrants[_currentQuadrant];
+            List<ZoneRange> zones = QuadrantCache.Quadrants[_currentQuadrant];
             if(InitZones)
             {
                 var temp = QuadrantHelper.WhereAmI(zones, currentXArea);
@@ -108,7 +105,7 @@ namespace ControllerRebinder.Core
             DetectZoneChange(currentXArea, zones);
         }
 
-        private void DetectZoneChange(double currentXArea, List<Range> zones)
+        private void DetectZoneChange(double currentXArea, List<ZoneRange> zones)
         {
             var tempZone = QuadrantHelper.WhereAmI(zones, currentXArea);
             if(_currentZone != null && tempZone != _currentZone)
