@@ -33,13 +33,18 @@ namespace ControllerRebinder.Core
 
         public XboxControllerBinder()
         {
-            ConfigCache.Init();
-            QuadrantCache.Init();
-            
+            InitCaches();
+
             _controller = new Controller(UserIndex.One);
             _inputSimulator = new InputSimulator();
 
             _configuration = ConfigCache.Configurations;
+        }
+
+        private static void InitCaches()
+        {
+            ConfigCache.Init();
+            QuadrantCache.Init();
         }
 
         public async Task Start()
