@@ -18,6 +18,7 @@ namespace ControllerRebinder.Core
     {
         private Controller _controller;
         private InputSimulator _inputSimulator;
+        private bool ReleaseButtons = true;
         private Configurations _configuration;
 
         private Quadrant _currentQuadrant = Quadrant.TopLeft;
@@ -63,7 +64,7 @@ namespace ControllerRebinder.Core
             }
         }
 
-        private async Task Run( int leftStickX, int leftStickY)
+        private async Task Run(int leftStickX, int leftStickY)
         {
             double StaticYAngle, StaticYArea, currentXArea;
 
@@ -78,28 +79,30 @@ namespace ControllerRebinder.Core
 
             Console.WriteLine($"Zones:  {_currentZone.Left},{_currentZone.Right} :  {_prevZone.Left},{_prevZone.Right}");
 
-            if(Math.Abs(leftStickX) <= _configuration.LeftJoyStick.DeadZone && Math.Abs(leftStickY) <= _configuration.LeftJoyStick.DeadZone)
+            if(isInDeadZone(leftStickX, leftStickY))
             {
                 await ButtonHelper.ReleaseButtons(_prevZone.Buttons);
-                Console.WriteLine(true);
+            }
+            else if(_didQuadrantChange || _didZoneChange )
+            {
+                var toРeslease = _prevZone.Buttons.Where(x => !_currentZone.Buttons.Contains(x)).ToList();
+                await ButtonHelper.ReleaseButtons(toРeslease);
+                _didZoneChange = false;
+                _didQuadrantChange = false;
             }
             else
             {
-                if(_didQuadrantChange || _didZoneChange)
-                {
-                    var toРeslease = _prevZone.Buttons.Where(x => !_currentZone.Buttons.Contains(x)).ToList();
-                    await ButtonHelper.ReleaseButtons(toРeslease);
-                    _didZoneChange = false;
-                    _didQuadrantChange = false;
-                }
-                else
-                {
-                    await ButtonHelper.PressButtons(_currentZone.Buttons);
-                }
+                await ButtonHelper.PressButtons(_currentZone.Buttons);
+                ReleaseButtons = true;
             }
             //QuadrantChange ZoneChange
             DetectQuadrantChange(leftStickX, leftStickY);
             DetectZoneChange(currentXArea, zones);
+        }
+
+        private bool isInDeadZone(int leftStickX, int leftStickY)
+        {
+            return Math.Abs(leftStickX) <= _configuration.LeftJoyStick.DeadZone && Math.Abs(leftStickY) <= _configuration.LeftJoyStick.DeadZone;
         }
 
         private List<ZoneRange> InitCurrentZonezForQuadrant(double currentXArea)
