@@ -51,18 +51,18 @@ namespace ControllerRebinder.Core
                 var leftStickX = state.Gamepad.LeftThumbX;
                 var leftStickY = state.Gamepad.LeftThumbY;
 
-                await Run(_configuration.LeftJoyStick.DeadZone, leftStickX, leftStickY);
+                await Run(leftStickX, leftStickY);
 
                 await Task.Delay(10);
 
             }
         }
 
-        private async Task Run(int threshold, int leftStickX, int leftStickY)
+        private async Task Run( int leftStickX, int leftStickY)
         {
             double StaticYAngle, StaticYArea, currentXArea;
 
-            ExtractCurrentAndStaticAreaOfStick(threshold,
+            ExtractCurrentAndStaticAreaOfStick(
                 leftStickX,
                 leftStickY,
                 out StaticYAngle,
@@ -139,11 +139,11 @@ namespace ControllerRebinder.Core
             }
         }
 
-        private void ExtractCurrentAndStaticAreaOfStick(int threshold, int leftStickX, int leftStickY, out double StaticYAngle, out double StaticYArea, out double currentXArea)
+        private void ExtractCurrentAndStaticAreaOfStick(int leftStickX, int leftStickY, out double StaticYAngle, out double StaticYArea, out double currentXArea)
         {
 
-            FiнdArea(threshold, _configuration.LeftJoyStick.MaxValController, _configuration.LeftJoyStick.MaxValController, out StaticYAngle, out StaticYArea);
-            FiнdArea(threshold, Math.Abs(leftStickX), Math.Abs(leftStickY), out double CurrenrtAngle, out currentXArea);
+            FiнdArea(_configuration.LeftJoyStick.ThreshHoldAreaCal, _configuration.LeftJoyStick.MaxValController, _configuration.LeftJoyStick.MaxValController, out StaticYAngle, out StaticYArea);
+            FiнdArea(_configuration.LeftJoyStick.ThreshHoldAreaCal, Math.Abs(leftStickX), Math.Abs(leftStickY), out double CurrenrtAngle, out currentXArea);
 
 
             Console.WriteLine(_currentQuadrant);

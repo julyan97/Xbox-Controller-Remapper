@@ -14,9 +14,13 @@ namespace ControllerRebinder.Common.Moddels.Configurations.SubModelsOfConfigurat
         public static VirtualKeyCode Left { get; set; } = VirtualKeyCode.VK_A;
         public static VirtualKeyCode Right { get; set; } = VirtualKeyCode.VK_D;
 
+        public double StaticArea { get; set; }
+
         public  double ForwardDown { get; set; }
         public  double LeftRight { get; set; }
         public  int DeadZone { get; set; }
+
         public  int MaxValController { get; set; }
+        public int ThreshHoldAreaCal { get; set; }
     }
 }
