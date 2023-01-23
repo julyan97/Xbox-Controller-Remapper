@@ -12,8 +12,15 @@ namespace ConsoleApp2
     {
         static async Task Main(string[] args)
         {
-            var controllerRebinder = new XboxControllerBinder();
-            await controllerRebinder.Start();
+            Start:
+            try
+            {
+                var controllerRebinder = new XboxControllerBinder();
+                await controllerRebinder.Start();
+            }
+            catch (Exception ex) {
+            goto Start;
+            }
 
         }
     }
