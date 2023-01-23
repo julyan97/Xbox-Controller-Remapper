@@ -41,7 +41,7 @@ namespace ControllerRebinder.Core
             _configuration = ConfigCache.Configurations;
         }
 
-        private static void InitCaches()
+        private void InitCaches()
         {
             ConfigCache.Init();
             QuadrantCache.Init();
