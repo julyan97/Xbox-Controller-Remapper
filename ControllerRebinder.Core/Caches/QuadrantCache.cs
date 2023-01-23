@@ -9,8 +9,19 @@ using WindowsInput.Native;
 
 namespace ControllerRebinder.Core.Caches
 {
+
+
     public class Range : IEquatable<Range>
     {
+
+        public double Left { get; set; }
+        public double Right { get; set; }
+
+        public List<VirtualKeyCode> Buttons { get; set; }
+        public Zone Zone { get; set; }
+        public ZoneCalctulationType ZoneCalculationType { get; set; }
+
+
         public Range(double left, double right, ZoneCalctulationType positive = ZoneCalctulationType.DefaultZoneCalctulationType, Zone zone = Zone.DefaultZone, List<VirtualKeyCode> buttons = null)
         {
             Left = left;
@@ -20,12 +31,6 @@ namespace ControllerRebinder.Core.Caches
             Buttons = buttons;
         }
 
-        public double Left { get; set; }
-        public double Right { get; set; }
-
-        public List<VirtualKeyCode> Buttons { get; set; }
-        public Zone Zone { get; set; }
-        public ZoneCalctulationType ZoneCalculationType { get; set; }
 
         public bool Equals(Range other)
         {

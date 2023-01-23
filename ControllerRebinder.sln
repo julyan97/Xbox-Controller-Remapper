@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ControllerRebinder", "Contr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ControllerRebinder.Core", "ControllerRebinder.Core\ControllerRebinder.Core.csproj", "{974DB123-71AF-4122-A842-BBB80002A5C7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ControllerRebinder.Common", "ControllerRebinder.Common\ControllerRebinder.Common.csproj", "{5A43C12E-E248-41EF-BEC0-7CBFC90E635F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{974DB123-71AF-4122-A842-BBB80002A5C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{974DB123-71AF-4122-A842-BBB80002A5C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{974DB123-71AF-4122-A842-BBB80002A5C7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5A43C12E-E248-41EF-BEC0-7CBFC90E635F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5A43C12E-E248-41EF-BEC0-7CBFC90E635F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5A43C12E-E248-41EF-BEC0-7CBFC90E635F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5A43C12E-E248-41EF-BEC0-7CBFC90E635F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

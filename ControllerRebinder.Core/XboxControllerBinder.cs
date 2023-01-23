@@ -13,7 +13,7 @@ using Range = ControllerRebinder.Core.Caches.Range;
 
 namespace ControllerRebinder.Core
 {
-    public class XboxControllerWASDBinderBeta
+    public class XboxControllerBinder
     {
         private Controller _controller;
         private State _previousState;
@@ -34,7 +34,7 @@ namespace ControllerRebinder.Core
         private const double LeftRightRange = 206639706.25628203;
         private const int DeadZone = 21815;
 
-        public XboxControllerWASDBinderBeta()
+        public XboxControllerBinder()
         {
             _controller = new Controller(UserIndex.One);
             _inputSimulator = new InputSimulator();
@@ -52,14 +52,14 @@ namespace ControllerRebinder.Core
                 var leftStickY = state.Gamepad.LeftThumbY;
 
 
-                await Run2(threshold, leftStickX, leftStickY);
+                await Run(threshold, leftStickX, leftStickY);
 
                 await Task.Delay(10);
 
             }
         }
 
-        private async Task Run2(int threshold, int leftStickX, int leftStickY)
+        private async Task Run(int threshold, int leftStickX, int leftStickY)
         {
             double StaticYAngle, StaticYArea, currentXArea;
 
@@ -93,7 +93,8 @@ namespace ControllerRebinder.Core
             {
                 if(_didQuadrantChange || _didZoneChange)
                 {
-                    await ReleaseButtons(_prevZone.Buttons);
+                    var toРeslease = _prevZone.Buttons.Where(x => !_currentZone.Buttons.Contains(x)).ToList();
+                    await ReleaseButtons(toРeslease);
                     _didZoneChange = false;
                     _didQuadrantChange = false;
                 }
@@ -103,7 +104,7 @@ namespace ControllerRebinder.Core
                 }
             }
             //QuadrantChange ZoneChange
-            DetectQuadrantChabge(leftStickX, leftStickY);
+            DetectQuadrantChange(leftStickX, leftStickY);
             DetectZoneChange(currentXArea, zones);
         }
 
@@ -118,7 +119,7 @@ namespace ControllerRebinder.Core
             }
         }
 
-        private void DetectQuadrantChabge(int leftStickX, int leftStickY)
+        private void DetectQuadrantChange(int leftStickX, int leftStickY)
         {
             var tempQuadrant = QuadrantHelper.WhereAmI(leftStickX, leftStickY);
             if(tempQuadrant != _currentQuadrant)
@@ -159,142 +160,26 @@ namespace ControllerRebinder.Core
             }
         }
 
-        private void Run(int threshold, int leftStickX, int leftStickY)
-        {
-            double StaticYAngle, StaticYArea, currentArea;
-
-            ExtractCurrentAndStaticAreaOfStick(threshold,
-                leftStickX,
-                leftStickY,
-                out StaticYAngle,
-                out StaticYArea,
-                out currentArea);
-
-            Console.WriteLine($"{leftStickX} : {leftStickY}");
-            Console.WriteLine(StaticYAngle); // 45
-
-            Console.WriteLine(StaticYArea); // 186639706.25628203
-            Console.WriteLine(currentArea); // MyArea
-
-            //Console.WriteLine(area2);
-
-            if(Math.Abs(leftStickX) <= DeadZone && Math.Abs(leftStickY) <= DeadZone)
-            {
-                Console.WriteLine(true);
-
-                _inputSimulator.Keyboard.KeyUp(VirtualKeyCode.VK_W);
-                _inputSimulator.Keyboard.KeyUp(VirtualKeyCode.VK_A);
-                _inputSimulator.Keyboard.KeyUp(VirtualKeyCode.VK_S);
-                _inputSimulator.Keyboard.KeyUp(VirtualKeyCode.VK_D);
-            }
-            else
-            {
-
-                if(currentArea > StaticYArea)
-                {
-                    if(leftStickY > 0)
-                    {
-                        if(currentArea > TopDownRange)
-                            _inputSimulator.Keyboard.KeyDown(VirtualKeyCode.VK_W);
-
-                        if(currentArea < TopDownRange && currentArea < LeftRightRange && leftStickX < 0)
-                        {
-                            _inputSimulator.Keyboard.KeyDown(VirtualKeyCode.VK_A);
-
-                        }
-                        if(currentArea < TopDownRange && currentArea < LeftRightRange && leftStickX > 0)
-                        {
-                            _inputSimulator.Keyboard.KeyDown(VirtualKeyCode.VK_D);
-                        }
-                    }
-                    else
-                    {
-                        _inputSimulator.Keyboard.KeyUp(VirtualKeyCode.VK_W);
-                        _inputSimulator.Keyboard.KeyUp(VirtualKeyCode.VK_A);
-                        _inputSimulator.Keyboard.KeyUp(VirtualKeyCode.VK_D);
-                    }
-
-                    if(leftStickY < 0)
-                    {
-                        if(currentArea > TopDownRange)
-                            _inputSimulator.Keyboard.KeyDown(VirtualKeyCode.VK_S);
-
-                        if(currentArea < TopDownRange && leftStickX < 0)
-                        {
-                            _inputSimulator.Keyboard.KeyDown(VirtualKeyCode.VK_A);
-
-                        }
-                        if(currentArea < TopDownRange && leftStickX > 0)
-                        {
-                            _inputSimulator.Keyboard.KeyDown(VirtualKeyCode.VK_D);
-
-                        }
-
-                    }
-                    else
-                    {
-                        _inputSimulator.Keyboard.KeyUp(VirtualKeyCode.VK_S);
-                        _inputSimulator.Keyboard.KeyUp(VirtualKeyCode.VK_A);
-                        _inputSimulator.Keyboard.KeyUp(VirtualKeyCode.VK_D);
-                    }
-                }
-                else if(currentArea < StaticYArea)
-                {
-                    if(leftStickX > 0 && currentArea < LeftRightRange)
-                    {
-                        _inputSimulator.Keyboard.KeyDown(VirtualKeyCode.VK_D);
-                    }
-                    else
-                    {
-                        _inputSimulator.Keyboard.KeyUp(VirtualKeyCode.VK_D);
-                    }
-
-                    if(leftStickX < 0 && currentArea < LeftRightRange)
-                    {
-                        _inputSimulator.Keyboard.KeyDown(VirtualKeyCode.VK_A);
-                    }
-                    else
-                    {
-                        _inputSimulator.Keyboard.KeyUp(VirtualKeyCode.VK_A);
-                    }
-
-                }
-                else
-                {
-                    _inputSimulator.Keyboard.KeyUp(VirtualKeyCode.VK_W);
-                    _inputSimulator.Keyboard.KeyUp(VirtualKeyCode.VK_A);
-                    _inputSimulator.Keyboard.KeyUp(VirtualKeyCode.VK_S);
-                    _inputSimulator.Keyboard.KeyUp(VirtualKeyCode.VK_D);
-                }
-
-            }
-
-
-
-        }
-
         private void ExtractCurrentAndStaticAreaOfStick(int threshold, int leftStickX, int leftStickY, out double StaticYAngle, out double StaticYArea, out double currentXArea)
         {
 
-            FimdArea(threshold, _maxValController, _maxValController, out StaticYAngle, out StaticYArea);
-            FimdArea(threshold, Math.Abs(leftStickX), Math.Abs(leftStickY), out double angle1, out currentXArea);
-            FimdArea(threshold, Math.Abs(leftStickY), Math.Abs(leftStickX), out double angle2, out double currentYArea);
+            FiнdArea(threshold, _maxValController, _maxValController, out StaticYAngle, out StaticYArea);
+            FiнdArea(threshold, Math.Abs(leftStickX), Math.Abs(leftStickY), out double CurrenrtAngle, out currentXArea);
 
 
             Console.WriteLine(_currentQuadrant);
             Console.WriteLine($"X (left-right):{leftStickX} : Y (up-down):{leftStickY}");
 
-            Console.WriteLine($"static:{StaticYArea} : X:{currentXArea} : Y:{currentYArea}"); // 186639706.25628203
+            Console.WriteLine($"static:{StaticYArea} : X:{currentXArea}"); // 186639706.25628203
             Console.WriteLine();
         }
 
-        private static void FimdArea(int threshold, int leftStickX, int leftStickY, out double angle, out double area)
+        private static void FiнdArea(int threshold, int leftStickX, int leftStickY, out double angle, out double area)
         {
             angle = Math.Atan2(leftStickY, leftStickX);
             angle = angle * (180 / Math.PI);
             area = (angle / 360) * Math.PI * Math.Pow(threshold, 2);
         }
-
         public async Task Original(int threshold = 21_815)
         {
             while(true)
