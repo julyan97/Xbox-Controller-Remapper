@@ -9,11 +9,6 @@ namespace ControllerRebinder.Common.Moddels.Configurations.SubModelsOfConfigurat
 {
     public class LeftJoyStick
     {
-        public static VirtualKeyCode Up { get; set; } = VirtualKeyCode.VK_W;
-        public static VirtualKeyCode Down { get; set; } = VirtualKeyCode.VK_S;
-        public static VirtualKeyCode Left { get; set; } = VirtualKeyCode.VK_A;
-        public static VirtualKeyCode Right { get; set; } = VirtualKeyCode.VK_D;
-
         public double StaticArea { get; set; }
 
         public  double ForwardDown { get; set; }
@@ -22,5 +17,7 @@ namespace ControllerRebinder.Common.Moddels.Configurations.SubModelsOfConfigurat
 
         public  int MaxValController { get; set; }
         public int ThreshHoldAreaCal { get; set; }
+
+        public Controlls Controlls { get; set; }
     }
 }

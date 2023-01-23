@@ -26,6 +26,7 @@ namespace ControllerRebinder.Core.Caches
         public static void Init()
         {
             Configurations = ConfigCache.Configurations;
+            var controlls = Configurations.LeftJoyStick.Controlls;
 
             Quadrants = new Dictionary<Quadrant, List<ZoneRange>>();
 
@@ -35,24 +36,24 @@ namespace ControllerRebinder.Core.Caches
             Quadrants.Add(Quadrant.BottomRight, new List<ZoneRange>());
 
             //++
-            Quadrants[Quadrant.TopRight].Add(new ZoneRange(Configurations.LeftJoyStick.ForwardDown, Configurations.LeftJoyStick.ForwardDown, ZoneCalctulationType.Positive, Zone.Upper, new List<VirtualKeyCode>{LeftStckBindings.Up}));
-            Quadrants[Quadrant.TopRight].Add(new ZoneRange(Configurations.LeftJoyStick.ForwardDown, Configurations.LeftJoyStick.LeftRight, ZoneCalctulationType.Between,Zone.Middle, new List<VirtualKeyCode> {LeftStckBindings.Up,LeftStckBindings.Right }));
-            Quadrants[Quadrant.TopRight].Add(new ZoneRange(Configurations.LeftJoyStick.LeftRight, Configurations.LeftJoyStick.LeftRight, ZoneCalctulationType.Negative, Zone.Lower, new List<VirtualKeyCode> {LeftStckBindings.Right }));
+            Quadrants[Quadrant.TopRight].Add(new ZoneRange(Configurations.LeftJoyStick.ForwardDown, Configurations.LeftJoyStick.ForwardDown, ZoneCalctulationType.Positive, Zone.Upper, new List<VirtualKeyCode>{controlls.Up}));
+            Quadrants[Quadrant.TopRight].Add(new ZoneRange(Configurations.LeftJoyStick.ForwardDown, Configurations.LeftJoyStick.LeftRight, ZoneCalctulationType.Between,Zone.Middle, new List<VirtualKeyCode> {controlls.Up,controlls.Right }));
+            Quadrants[Quadrant.TopRight].Add(new ZoneRange(Configurations.LeftJoyStick.LeftRight, Configurations.LeftJoyStick.LeftRight, ZoneCalctulationType.Negative, Zone.Lower, new List<VirtualKeyCode> {controlls.Right }));
 
             //-+
-            Quadrants[Quadrant.TopLeft].Add(new ZoneRange(Configurations.LeftJoyStick.ForwardDown, Configurations.LeftJoyStick.ForwardDown, ZoneCalctulationType.Positive,Zone.Upper, new List<VirtualKeyCode> { LeftStckBindings.Up }));
-            Quadrants[Quadrant.TopLeft].Add(new ZoneRange(Configurations.LeftJoyStick.ForwardDown, Configurations.LeftJoyStick.LeftRight, ZoneCalctulationType.Between, Zone.Middle, new List<VirtualKeyCode> { LeftStckBindings.Up, LeftStckBindings.Left }));
-            Quadrants[Quadrant.TopLeft].Add(new ZoneRange(Configurations.LeftJoyStick.LeftRight, Configurations.LeftJoyStick.LeftRight, ZoneCalctulationType.Negative,Zone.Lower, new List<VirtualKeyCode> { LeftStckBindings.Left }));
+            Quadrants[Quadrant.TopLeft].Add(new ZoneRange(Configurations.LeftJoyStick.ForwardDown, Configurations.LeftJoyStick.ForwardDown, ZoneCalctulationType.Positive,Zone.Upper, new List<VirtualKeyCode> { controlls.Up }));
+            Quadrants[Quadrant.TopLeft].Add(new ZoneRange(Configurations.LeftJoyStick.ForwardDown, Configurations.LeftJoyStick.LeftRight, ZoneCalctulationType.Between, Zone.Middle, new List<VirtualKeyCode> { controlls.Up, controlls.Left }));
+            Quadrants[Quadrant.TopLeft].Add(new ZoneRange(Configurations.LeftJoyStick.LeftRight, Configurations.LeftJoyStick.LeftRight, ZoneCalctulationType.Negative,Zone.Lower, new List<VirtualKeyCode> { controlls.Left }));
 
             //--
-            Quadrants[Quadrant.BottomLeft].Add(new ZoneRange(Configurations.LeftJoyStick.LeftRight, Configurations.LeftJoyStick.LeftRight, ZoneCalctulationType.Negative, Zone.Upper, new List<VirtualKeyCode> {  LeftStckBindings.Left }));
-            Quadrants[Quadrant.BottomLeft].Add(new ZoneRange(Configurations.LeftJoyStick.ForwardDown, Configurations.LeftJoyStick.LeftRight, ZoneCalctulationType.Between, Zone.Middle, new List<VirtualKeyCode> { LeftStckBindings.Down, LeftStckBindings.Left }));
-            Quadrants[Quadrant.BottomLeft].Add(new ZoneRange(Configurations.LeftJoyStick.ForwardDown, Configurations.LeftJoyStick.ForwardDown, ZoneCalctulationType.Positive, Zone.Lower, new List<VirtualKeyCode> { LeftStckBindings.Down}));
+            Quadrants[Quadrant.BottomLeft].Add(new ZoneRange(Configurations.LeftJoyStick.LeftRight, Configurations.LeftJoyStick.LeftRight, ZoneCalctulationType.Negative, Zone.Upper, new List<VirtualKeyCode> {  controlls.Left }));
+            Quadrants[Quadrant.BottomLeft].Add(new ZoneRange(Configurations.LeftJoyStick.ForwardDown, Configurations.LeftJoyStick.LeftRight, ZoneCalctulationType.Between, Zone.Middle, new List<VirtualKeyCode> { controlls.Down, controlls.Left }));
+            Quadrants[Quadrant.BottomLeft].Add(new ZoneRange(Configurations.LeftJoyStick.ForwardDown, Configurations.LeftJoyStick.ForwardDown, ZoneCalctulationType.Positive, Zone.Lower, new List<VirtualKeyCode> { controlls.Down}));
 
             //+-
-            Quadrants[Quadrant.BottomRight].Add(new ZoneRange(Configurations.LeftJoyStick.ForwardDown, Configurations.LeftJoyStick.ForwardDown, ZoneCalctulationType.Positive, Zone.Lower, new List<VirtualKeyCode> { LeftStckBindings.Down }));
-            Quadrants[Quadrant.BottomRight].Add(new ZoneRange(Configurations.LeftJoyStick.ForwardDown, Configurations.LeftJoyStick.LeftRight, ZoneCalctulationType.Between, Zone.Middle, new List<VirtualKeyCode> { LeftStckBindings.Down, LeftStckBindings.Right }));
-            Quadrants[Quadrant.BottomRight].Add(new ZoneRange(Configurations.LeftJoyStick.LeftRight, Configurations.LeftJoyStick.LeftRight, ZoneCalctulationType.Negative, Zone.Upper, new List<VirtualKeyCode> {  LeftStckBindings.Right }));
+            Quadrants[Quadrant.BottomRight].Add(new ZoneRange(Configurations.LeftJoyStick.ForwardDown, Configurations.LeftJoyStick.ForwardDown, ZoneCalctulationType.Positive, Zone.Lower, new List<VirtualKeyCode> { controlls.Down }));
+            Quadrants[Quadrant.BottomRight].Add(new ZoneRange(Configurations.LeftJoyStick.ForwardDown, Configurations.LeftJoyStick.LeftRight, ZoneCalctulationType.Between, Zone.Middle, new List<VirtualKeyCode> { controlls.Down, controlls.Right }));
+            Quadrants[Quadrant.BottomRight].Add(new ZoneRange(Configurations.LeftJoyStick.LeftRight, Configurations.LeftJoyStick.LeftRight, ZoneCalctulationType.Negative, Zone.Upper, new List<VirtualKeyCode> {  controlls.Right }));
 
         }
 
