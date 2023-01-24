@@ -1,12 +1,7 @@
-﻿using ControllerRebinder.Common.Moddels;
+﻿using ControllerRebinder.Common.Enumerations;
+using ControllerRebinder.Common.Moddels;
 using ControllerRebinder.Common.Moddels.Configurations;
-using ControllerRebinder.Core.Controlls;
-using ControllerRebinder.Core.Enumerations;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using WindowsInput.Native;
 
 namespace ControllerRebinder.Core.Caches
@@ -16,7 +11,7 @@ namespace ControllerRebinder.Core.Caches
     {
         private static Configurations Configurations { get; set; }
         public static Dictionary<Quadrant, List<ZoneRange>> Quadrants { get; set; }
-        
+
 
         /// <summary>
         /// The Init method caches hte information about eache Quadrant and its zones att the start of the application
@@ -36,24 +31,24 @@ namespace ControllerRebinder.Core.Caches
             Quadrants.Add(Quadrant.BottomRight, new List<ZoneRange>());
 
             //++
-            Quadrants[Quadrant.TopRight].Add(new ZoneRange(Configurations.LeftJoyStick.ForwardDown, Configurations.LeftJoyStick.ForwardDown, ZoneCalctulationType.Positive, Zone.Upper, new List<VirtualKeyCode>{controlls.Up}));
-            Quadrants[Quadrant.TopRight].Add(new ZoneRange(Configurations.LeftJoyStick.ForwardDown, Configurations.LeftJoyStick.LeftRight, ZoneCalctulationType.Between,Zone.Middle, new List<VirtualKeyCode> {controlls.Up,controlls.Right }));
-            Quadrants[Quadrant.TopRight].Add(new ZoneRange(Configurations.LeftJoyStick.LeftRight, Configurations.LeftJoyStick.LeftRight, ZoneCalctulationType.Negative, Zone.Lower, new List<VirtualKeyCode> {controlls.Right }));
+            Quadrants[Quadrant.TopRight].Add(new ZoneRange(Configurations.LeftJoyStick.ForwardDown, Configurations.LeftJoyStick.ForwardDown, ZoneCalctulationType.Positive, Zone.Upper, new List<VirtualKeyCode> { controlls.Up }));
+            Quadrants[Quadrant.TopRight].Add(new ZoneRange(Configurations.LeftJoyStick.ForwardDown, Configurations.LeftJoyStick.LeftRight, ZoneCalctulationType.Between, Zone.Middle, new List<VirtualKeyCode> { controlls.Up, controlls.Right }));
+            Quadrants[Quadrant.TopRight].Add(new ZoneRange(Configurations.LeftJoyStick.LeftRight, Configurations.LeftJoyStick.LeftRight, ZoneCalctulationType.Negative, Zone.Lower, new List<VirtualKeyCode> { controlls.Right }));
 
             //-+
-            Quadrants[Quadrant.TopLeft].Add(new ZoneRange(Configurations.LeftJoyStick.ForwardDown, Configurations.LeftJoyStick.ForwardDown, ZoneCalctulationType.Positive,Zone.Upper, new List<VirtualKeyCode> { controlls.Up }));
+            Quadrants[Quadrant.TopLeft].Add(new ZoneRange(Configurations.LeftJoyStick.ForwardDown, Configurations.LeftJoyStick.ForwardDown, ZoneCalctulationType.Positive, Zone.Upper, new List<VirtualKeyCode> { controlls.Up }));
             Quadrants[Quadrant.TopLeft].Add(new ZoneRange(Configurations.LeftJoyStick.ForwardDown, Configurations.LeftJoyStick.LeftRight, ZoneCalctulationType.Between, Zone.Middle, new List<VirtualKeyCode> { controlls.Up, controlls.Left }));
-            Quadrants[Quadrant.TopLeft].Add(new ZoneRange(Configurations.LeftJoyStick.LeftRight, Configurations.LeftJoyStick.LeftRight, ZoneCalctulationType.Negative,Zone.Lower, new List<VirtualKeyCode> { controlls.Left }));
+            Quadrants[Quadrant.TopLeft].Add(new ZoneRange(Configurations.LeftJoyStick.LeftRight, Configurations.LeftJoyStick.LeftRight, ZoneCalctulationType.Negative, Zone.Lower, new List<VirtualKeyCode> { controlls.Left }));
 
             //--
-            Quadrants[Quadrant.BottomLeft].Add(new ZoneRange(Configurations.LeftJoyStick.LeftRight, Configurations.LeftJoyStick.LeftRight, ZoneCalctulationType.Negative, Zone.Upper, new List<VirtualKeyCode> {  controlls.Left }));
+            Quadrants[Quadrant.BottomLeft].Add(new ZoneRange(Configurations.LeftJoyStick.LeftRight, Configurations.LeftJoyStick.LeftRight, ZoneCalctulationType.Negative, Zone.Upper, new List<VirtualKeyCode> { controlls.Left }));
             Quadrants[Quadrant.BottomLeft].Add(new ZoneRange(Configurations.LeftJoyStick.ForwardDown, Configurations.LeftJoyStick.LeftRight, ZoneCalctulationType.Between, Zone.Middle, new List<VirtualKeyCode> { controlls.Down, controlls.Left }));
-            Quadrants[Quadrant.BottomLeft].Add(new ZoneRange(Configurations.LeftJoyStick.ForwardDown, Configurations.LeftJoyStick.ForwardDown, ZoneCalctulationType.Positive, Zone.Lower, new List<VirtualKeyCode> { controlls.Down}));
+            Quadrants[Quadrant.BottomLeft].Add(new ZoneRange(Configurations.LeftJoyStick.ForwardDown, Configurations.LeftJoyStick.ForwardDown, ZoneCalctulationType.Positive, Zone.Lower, new List<VirtualKeyCode> { controlls.Down }));
 
             //+-
             Quadrants[Quadrant.BottomRight].Add(new ZoneRange(Configurations.LeftJoyStick.ForwardDown, Configurations.LeftJoyStick.ForwardDown, ZoneCalctulationType.Positive, Zone.Lower, new List<VirtualKeyCode> { controlls.Down }));
             Quadrants[Quadrant.BottomRight].Add(new ZoneRange(Configurations.LeftJoyStick.ForwardDown, Configurations.LeftJoyStick.LeftRight, ZoneCalctulationType.Between, Zone.Middle, new List<VirtualKeyCode> { controlls.Down, controlls.Right }));
-            Quadrants[Quadrant.BottomRight].Add(new ZoneRange(Configurations.LeftJoyStick.LeftRight, Configurations.LeftJoyStick.LeftRight, ZoneCalctulationType.Negative, Zone.Upper, new List<VirtualKeyCode> {  controlls.Right }));
+            Quadrants[Quadrant.BottomRight].Add(new ZoneRange(Configurations.LeftJoyStick.LeftRight, Configurations.LeftJoyStick.LeftRight, ZoneCalctulationType.Negative, Zone.Upper, new List<VirtualKeyCode> { controlls.Right }));
 
         }
 

@@ -1,16 +1,15 @@
-﻿using DXNET.XInput;
+﻿using ControllerRebinder.Common.Enumerations;
+using ControllerRebinder.Common.Moddels;
+using ControllerRebinder.Common.Moddels.Configurations;
+using ControllerRebinder.Core.Caches;
+using ControllerRebinder.Core.Helpers;
+using DXNET.XInput;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using WindowsInput.Native;
 using WindowsInput;
-using ControllerRebinder.Core.Helpers;
-using ControllerRebinder.Core.Enumerations;
-using ControllerRebinder.Core.Caches;
-using ControllerRebinder.Common.Moddels;
-using ControllerRebinder.Common.Moddels.Configurations;
+using WindowsInput.Native;
 
 namespace ControllerRebinder.Core
 {
@@ -20,6 +19,7 @@ namespace ControllerRebinder.Core
         private InputSimulator _inputSimulator;
         private bool ReleaseButtons = true;
         private Configurations _configuration;
+        private List<VirtualKeyCode> releasedButtons;
 
         private Quadrant _currentQuadrant = Quadrant.TopLeft;
         private Quadrant _prevQuadrant = Quadrant.TopLeft;
@@ -38,7 +38,7 @@ namespace ControllerRebinder.Core
 
             _controller = new Controller(UserIndex.One);
             _inputSimulator = new InputSimulator();
-
+            releasedButtons= new List<VirtualKeyCode>();
             _configuration = ConfigCache.Configurations;
         }
 
@@ -81,12 +81,22 @@ namespace ControllerRebinder.Core
 
             if(isInDeadZone(leftStickX, leftStickY))
             {
-                await ButtonHelper.ReleaseButtons(_prevZone.Buttons);
+
+                var shouldRelease = _prevZone.Buttons;
+                if(shouldRelease != releasedButtons)
+                {
+                    await ButtonHelper.ReleaseButtons(shouldRelease);
+                }
+                releasedButtons = shouldRelease;
             }
-            else if(_didQuadrantChange || _didZoneChange )
+            else if(_didQuadrantChange || _didZoneChange)
             {
-                var toРeslease = _prevZone.Buttons.Where(x => !_currentZone.Buttons.Contains(x)).ToList();
-                await ButtonHelper.ReleaseButtons(toРeslease);
+                var shouldRelease = _prevZone.Buttons.Where(x => !_currentZone.Buttons.Contains(x)).ToList();
+                if(shouldRelease != releasedButtons)
+                {
+                    await ButtonHelper.ReleaseButtons(shouldRelease);
+                }
+                releasedButtons = shouldRelease;
                 _didZoneChange = false;
                 _didQuadrantChange = false;
             }

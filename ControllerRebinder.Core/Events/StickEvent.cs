@@ -1,10 +1,6 @@
-﻿using ControllerRebinder.Core.Caches;
-using ControllerRebinder.Core.Enumerations;
+﻿using ControllerRebinder.Common.Enumerations;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
-using System.Threading.Tasks;
 using WindowsInput.Native;
 
 namespace ControllerRebinder.Core.Events

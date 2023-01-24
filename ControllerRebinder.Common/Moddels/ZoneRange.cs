@@ -1,9 +1,6 @@
-﻿using ControllerRebinder.Core.Enumerations;
+﻿using ControllerRebinder.Common.Enumerations;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using WindowsInput.Native;
 
 namespace ControllerRebinder.Common.Moddels
@@ -33,6 +30,10 @@ namespace ControllerRebinder.Common.Moddels
             Buttons = buttons;
         }
 
+        public ZoneRange()
+        {
+
+        }
 
         public bool Equals(ZoneRange other)
         {

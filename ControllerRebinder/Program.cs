@@ -1,12 +1,8 @@
 ﻿using ControllerRebinder.Core;
-using DXNET.XInput;
 using System;
-using System.Threading;
 using System.Threading.Tasks;
-using WindowsInput;
-using WindowsInput.Native;
 
-namespace ConsoleApp2
+namespace ControllerRebinder
 {
     public class Program
     {
@@ -18,8 +14,9 @@ namespace ConsoleApp2
                 var controllerRebinder = new XboxControllerBinder();
                 await controllerRebinder.Start();
             }
-            catch (Exception ex) {
-            goto Start;
+            catch(Exception ex)
+            {
+                goto Start;
             }
 
         }

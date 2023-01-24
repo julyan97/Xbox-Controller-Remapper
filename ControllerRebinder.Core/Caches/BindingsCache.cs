@@ -1,10 +1,6 @@
-﻿using ControllerRebinder.Core.Controlls;
-using ControllerRebinder.Core.Enumerations;
-using System;
+﻿
+using ControllerRebinder.Common.Enumerations;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using WindowsInput.Native;
 
 namespace ControllerRebinder.Core.Caches
@@ -46,6 +42,6 @@ namespace ControllerRebinder.Core.Caches
             LeftStickBindings.Add((Quadrant.BottomRight, Zone.Middle), new List<VirtualKeyCode>());
             LeftStickBindings.Add((Quadrant.BottomRight, Zone.Lower), new List<VirtualKeyCode>());
 
-        } 
+        }
     }
 }
