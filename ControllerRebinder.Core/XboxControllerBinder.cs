@@ -31,7 +31,8 @@ namespace ControllerRebinder.Core
         private bool _didZoneChange = false;
         private bool _didQuadrantChange = false;
 
-
+        private double StaticYAngle;
+        private double StaticYArea;
         public XboxControllerBinder()
         {
             InitCaches();
@@ -50,6 +51,7 @@ namespace ControllerRebinder.Core
 
         public async Task Start()
         {
+            CircleHelper.FindArea(_configuration.LeftJoyStick.ThreshHoldAreaCal, _configuration.LeftJoyStick.MaxValController, _configuration.LeftJoyStick.MaxValController, out StaticYAngle, out StaticYArea);
             while(true)
             {
                 Console.WriteLine($"Quadrantrs:  {_currentQuadrant} : {_prevQuadrant}");
@@ -66,13 +68,11 @@ namespace ControllerRebinder.Core
 
         private async Task Run_2_0(int leftStickX, int leftStickY)
         {
-            double StaticYAngle, StaticYArea, currentXArea;
+            double  currentXArea;
 
             ExtractCurrentAndStaticAreaOfStick(
                 leftStickX,
                 leftStickY,
-                out StaticYAngle,
-                out StaticYArea,
                 out currentXArea);//use to determin position in the quadrant
 
             List<ZoneRange> zones = CircleHelper.InitCurrentZonezForQuadrant(currentXArea, ref _currentQuadrant,ref _currentZone,ref _prevZone, ref InitZones );
@@ -154,17 +154,15 @@ namespace ControllerRebinder.Core
             }
         }
 
-        private void ExtractCurrentAndStaticAreaOfStick(int leftStickX, int leftStickY, out double StaticYAngle, out double StaticYArea, out double currentXArea)
+        private void ExtractCurrentAndStaticAreaOfStick(int leftStickX, int leftStickY, out double currentXArea)
         {
-
-            CircleHelper.FindArea(_configuration.LeftJoyStick.ThreshHoldAreaCal, _configuration.LeftJoyStick.MaxValController, _configuration.LeftJoyStick.MaxValController, out StaticYAngle, out StaticYArea);
             CircleHelper.FindArea(_configuration.LeftJoyStick.ThreshHoldAreaCal, Math.Abs(leftStickX), Math.Abs(leftStickY), out double CurrenrtAngle, out currentXArea);
 
 
             Console.WriteLine(_currentQuadrant);
             Console.WriteLine($"X (left-right):{leftStickX} : Y (up-down):{leftStickY}");
 
-            Console.WriteLine($"static:{StaticYArea} : X:{currentXArea}"); // 186639706.25628203
+            Console.WriteLine($"static:{this.StaticYArea} : X:{currentXArea}"); // 186639706.25628203
             Console.WriteLine();
         }
       
