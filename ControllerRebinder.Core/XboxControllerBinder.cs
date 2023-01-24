@@ -38,7 +38,7 @@ namespace ControllerRebinder.Core
 
             _controller = new Controller(UserIndex.One);
             _inputSimulator = new InputSimulator();
-            releasedButtons= new List<VirtualKeyCode>();
+            releasedButtons = new List<VirtualKeyCode>();
             _configuration = ConfigCache.Configurations;
         }
 
@@ -57,14 +57,14 @@ namespace ControllerRebinder.Core
                 var leftStickX = state.Gamepad.LeftThumbX;
                 var leftStickY = state.Gamepad.LeftThumbY;
 
-                await Run(leftStickX, leftStickY);
+                await Run_2_0(leftStickX, leftStickY);
 
                 await Task.Delay(10);
 
             }
         }
 
-        private async Task Run(int leftStickX, int leftStickY)
+        private async Task Run_2_0(int leftStickX, int leftStickY)
         {
             double StaticYAngle, StaticYArea, currentXArea;
 
@@ -75,11 +75,11 @@ namespace ControllerRebinder.Core
                 out StaticYArea,
                 out currentXArea);//use to determin position in the quadrant
 
-            List<ZoneRange> zones = InitCurrentZonezForQuadrant(currentXArea);
+            List<ZoneRange> zones = CircleHelper.InitCurrentZonezForQuadrant(currentXArea, ref _currentQuadrant,ref _currentZone,ref _prevZone, ref InitZones );
 
             Console.WriteLine($"Zones:  {_currentZone.Left},{_currentZone.Right} :  {_prevZone.Left},{_prevZone.Right}");
 
-            if(isInDeadZone(leftStickX, leftStickY))
+            if(CircleHelper.isInDeadZone(leftStickX, leftStickY))
             {
 
                 var shouldRelease = _prevZone.Buttons;
@@ -106,62 +106,15 @@ namespace ControllerRebinder.Core
                 ReleaseButtons = true;
             }
             //QuadrantChange ZoneChange
-            DetectQuadrantChange(leftStickX, leftStickY);
-            DetectZoneChange(currentXArea, zones);
-        }
-
-        private bool isInDeadZone(int leftStickX, int leftStickY)
-        {
-            return Math.Abs(leftStickX) <= _configuration.LeftJoyStick.DeadZone && Math.Abs(leftStickY) <= _configuration.LeftJoyStick.DeadZone;
-        }
-
-        private List<ZoneRange> InitCurrentZonezForQuadrant(double currentXArea)
-        {
-            List<ZoneRange> zones = QuadrantCache.Quadrants[_currentQuadrant];
-            if(InitZones)
-            {
-                var temp = QuadrantHelper.WhereAmI(zones, currentXArea);
-                _prevZone = temp;
-                _currentZone = temp;
-                InitZones = false;
-            }
-
-            return zones;
-        }
-
-        /// <summary>
-        /// Keep track of the previous and current zone and if it changes _didZoneChange will become true 
-        /// </summary>
-        private void DetectZoneChange(double currentXArea, List<ZoneRange> zones)
-        {
-            var tempZone = QuadrantHelper.WhereAmI(zones, currentXArea);
-            if(_currentZone != null && tempZone != _currentZone)
-            {
-                _prevZone = _currentZone;
-                _currentZone = tempZone;
-                _didZoneChange = true;
-            }
-        }
-
-        /// <summary>
-        /// Keep track of the previous and current zone and if it changes _didQuadrantChange will become true 
-        /// </summary>
-        private void DetectQuadrantChange(int leftStickX, int leftStickY)
-        {
-            var tempQuadrant = QuadrantHelper.WhereAmI(leftStickX, leftStickY);
-            if(tempQuadrant != _currentQuadrant)
-            {
-                _prevQuadrant = _currentQuadrant;
-                _currentQuadrant = tempQuadrant;
-                _didQuadrantChange = true;
-            }
+            CircleHelper.DetectQuadrantChange(leftStickX, leftStickY, ref _currentQuadrant, ref _prevQuadrant, ref _didQuadrantChange);
+            CircleHelper.DetectZoneChange(currentXArea, zones,ref  _currentZone, ref _prevZone, ref _didZoneChange);
         }
 
         private void ExtractCurrentAndStaticAreaOfStick(int leftStickX, int leftStickY, out double StaticYAngle, out double StaticYArea, out double currentXArea)
         {
 
-            FiнdArea(_configuration.LeftJoyStick.ThreshHoldAreaCal, _configuration.LeftJoyStick.MaxValController, _configuration.LeftJoyStick.MaxValController, out StaticYAngle, out StaticYArea);
-            FiнdArea(_configuration.LeftJoyStick.ThreshHoldAreaCal, Math.Abs(leftStickX), Math.Abs(leftStickY), out double CurrenrtAngle, out currentXArea);
+            CircleHelper.FindArea(_configuration.LeftJoyStick.ThreshHoldAreaCal, _configuration.LeftJoyStick.MaxValController, _configuration.LeftJoyStick.MaxValController, out StaticYAngle, out StaticYArea);
+            CircleHelper.FindArea(_configuration.LeftJoyStick.ThreshHoldAreaCal, Math.Abs(leftStickX), Math.Abs(leftStickY), out double CurrenrtAngle, out currentXArea);
 
 
             Console.WriteLine(_currentQuadrant);
@@ -170,14 +123,7 @@ namespace ControllerRebinder.Core
             Console.WriteLine($"static:{StaticYArea} : X:{currentXArea}"); // 186639706.25628203
             Console.WriteLine();
         }
-
-        private static void FiнdArea(int threshold, int leftStickX, int leftStickY, out double angle, out double area)
-        {
-            angle = Math.Atan2(leftStickY, leftStickX);
-            angle = angle * (180 / Math.PI);
-            area = (angle / 360) * Math.PI * Math.Pow(threshold, 2);
-        }
-        public async Task Original(int threshold = 21_815)
+        public async Task Run_1_0(int threshold = 21_815)
         {
             while(true)
             {
