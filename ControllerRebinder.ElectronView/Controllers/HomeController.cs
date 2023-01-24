@@ -1,8 +1,11 @@
 ﻿using ControllerRebinder.Common.Moddels.Configurations.SubModelsOfConfigurations;
+using ControllerRebinder.Common.Moddels.DTOs;
 using ControllerRebinder.Core.Caches;
 using ControllerRebinder.ElectronView.Models;
+using ElectronNET.API.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -27,9 +30,26 @@ namespace ControllerRebinder.ElectronView.Controllers
         }
 
         [HttpPost]
-        public IActionResult Index(LeftJoyStick leftJoyStick)
+        public IActionResult Settings(LeftStickDTO leftJoyStick)
         {
-            return View();
+            var config = ConfigCache.Configurations.LeftJoyStick;
+
+            config.StaticArea = leftJoyStick.StaticArea;
+            config.ThreshHoldAreaCal = leftJoyStick.ThreshHoldAreaCal;
+            config.MaxValController = leftJoyStick.MaxValController;
+            config.ForwardDown = leftJoyStick.ForwardDown;
+            config.LeftRight = leftJoyStick.LeftRight;
+            config.DeadZone = leftJoyStick.DeadZone;
+
+            config.Controlls.Up = leftJoyStick.Up;
+            config.Controlls.Down = leftJoyStick.Down;
+            config.Controlls.Left = leftJoyStick.Left;
+            config.Controlls.Right = leftJoyStick.Right;
+
+            var data = JsonConvert.SerializeObject(config);
+            System.IO.File.WriteAllText("appsettings.json", data);
+
+            return RedirectToAction("Index");
         }
 
         public IActionResult Privacy()
