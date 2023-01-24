@@ -110,19 +110,6 @@ namespace ControllerRebinder.Core
             CircleHelper.DetectZoneChange(currentXArea, zones,ref  _currentZone, ref _prevZone, ref _didZoneChange);
         }
 
-        private void ExtractCurrentAndStaticAreaOfStick(int leftStickX, int leftStickY, out double StaticYAngle, out double StaticYArea, out double currentXArea)
-        {
-
-            CircleHelper.FindArea(_configuration.LeftJoyStick.ThreshHoldAreaCal, _configuration.LeftJoyStick.MaxValController, _configuration.LeftJoyStick.MaxValController, out StaticYAngle, out StaticYArea);
-            CircleHelper.FindArea(_configuration.LeftJoyStick.ThreshHoldAreaCal, Math.Abs(leftStickX), Math.Abs(leftStickY), out double CurrenrtAngle, out currentXArea);
-
-
-            Console.WriteLine(_currentQuadrant);
-            Console.WriteLine($"X (left-right):{leftStickX} : Y (up-down):{leftStickY}");
-
-            Console.WriteLine($"static:{StaticYArea} : X:{currentXArea}"); // 186639706.25628203
-            Console.WriteLine();
-        }
         public async Task Run_1_0(int threshold = 21_815)
         {
             while(true)
@@ -166,6 +153,21 @@ namespace ControllerRebinder.Core
                 await Task.Delay(10);
             }
         }
+
+        private void ExtractCurrentAndStaticAreaOfStick(int leftStickX, int leftStickY, out double StaticYAngle, out double StaticYArea, out double currentXArea)
+        {
+
+            CircleHelper.FindArea(_configuration.LeftJoyStick.ThreshHoldAreaCal, _configuration.LeftJoyStick.MaxValController, _configuration.LeftJoyStick.MaxValController, out StaticYAngle, out StaticYArea);
+            CircleHelper.FindArea(_configuration.LeftJoyStick.ThreshHoldAreaCal, Math.Abs(leftStickX), Math.Abs(leftStickY), out double CurrenrtAngle, out currentXArea);
+
+
+            Console.WriteLine(_currentQuadrant);
+            Console.WriteLine($"X (left-right):{leftStickX} : Y (up-down):{leftStickY}");
+
+            Console.WriteLine($"static:{StaticYArea} : X:{currentXArea}"); // 186639706.25628203
+            Console.WriteLine();
+        }
+      
     }
 }
 
