@@ -12,11 +12,10 @@ namespace ControllerRebinder.Core.Helpers
 {
     public static class CircleHelper
     {
-        private static Configurations _configuration = ConfigCache.Configurations;
 
-        public static bool isInDeadZone(int leftStickX, int leftStickY)
+        public static bool isInDeadZone(int leftStickX, int leftStickY, int deadZone)
         {
-            return Math.Abs(leftStickX) <= _configuration.LeftJoyStick.DeadZone && Math.Abs(leftStickY) <= _configuration.LeftJoyStick.DeadZone;
+            return Math.Abs(leftStickX) <= deadZone && Math.Abs(leftStickY) <= deadZone;
         }
 
         public static List<ZoneRange> InitCurrentZonezForQuadrant(double currentXArea, ref Quadrant _currentQuadrant, ref ZoneRange _currentZone, ref ZoneRange _prevZone, ref bool InitZones)

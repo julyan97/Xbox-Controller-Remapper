@@ -1,6 +1,7 @@
 ﻿using ControllerRebinder.Common.Enumerations;
 using ControllerRebinder.Common.Moddels;
 using ControllerRebinder.Common.Moddels.Configurations;
+using ControllerRebinder.Common.Moddels.Configurations.SubModelsOfConfigurations;
 using ControllerRebinder.Core.Caches;
 using ControllerRebinder.Core.Helpers;
 using DXNET.XInput;
@@ -59,18 +60,48 @@ namespace ControllerRebinder.Core
                 var leftStickX = state.Gamepad.LeftThumbX;
                 var leftStickY = state.Gamepad.LeftThumbY;
 
-                await Run_2_0(leftStickX, leftStickY);
+                await Run_3_0(leftStickX, leftStickY);
 
                 await Task.Delay(10);
 
             }
         }
 
+        private async Task Run_3_0(int leftStickX, int leftStickY)
+        {
+
+            ExtractCurrentArea(
+                leftStickX,
+                leftStickY,
+                out double currentXArea);//use to determin position in the quadrant
+
+            var upDown = ConfigCache.Configurations.LeftJoyStick.ForwardDown;
+            var leftRight = ConfigCache.Configurations.LeftJoyStick.LeftRight;
+            var controlls = ConfigCache.Configurations.LeftJoyStick.Controlls;
+            var deadZone = ConfigCache.Configurations.LeftJoyStick.DeadZone;
+            var keyboard = _inputSimulator.Keyboard;
+
+            if(CircleHelper.isInDeadZone(leftStickX, leftStickY, deadZone))
+            {
+                controlls.ReleaseAll(_inputSimulator);
+                
+            }
+            else
+            {
+                StickMovementByQuadrants(currentXArea, upDown, leftRight, controlls, keyboard);
+
+            }
+            //QuadrantChange ZoneChange
+            CircleHelper.DetectQuadrantChange(leftStickX, leftStickY, ref _currentQuadrant, ref _prevQuadrant, ref _didQuadrantChange);
+        }
+
         private async Task Run_2_0(int leftStickX, int leftStickY)
         {
             double  currentXArea;
+            var deadZone = ConfigCache.Configurations.LeftJoyStick.DeadZone;
 
-            ExtractCurrentAndStaticAreaOfStick(
+
+            ExtractCurrentArea(
                 leftStickX,
                 leftStickY,
                 out currentXArea);//use to determin position in the quadrant
@@ -79,7 +110,7 @@ namespace ControllerRebinder.Core
 
             Console.WriteLine($"Zones:  {_currentZone.Left},{_currentZone.Right} :  {_prevZone.Left},{_prevZone.Right}");
 
-            if(CircleHelper.isInDeadZone(leftStickX, leftStickY))
+            if(CircleHelper.isInDeadZone(leftStickX, leftStickY, deadZone))
             {
 
                 var shouldRelease = _prevZone.Buttons;
@@ -154,18 +185,68 @@ namespace ControllerRebinder.Core
             }
         }
 
-        private void ExtractCurrentAndStaticAreaOfStick(int leftStickX, int leftStickY, out double currentXArea)
+        private void ExtractCurrentArea(int leftStickX, int leftStickY, out double currentXArea)
         {
             CircleHelper.FindArea(_configuration.LeftJoyStick.ThreshHoldAreaCal, Math.Abs(leftStickX), Math.Abs(leftStickY), out double CurrenrtAngle, out currentXArea);
 
-
-            Console.WriteLine(_currentQuadrant);
             Console.WriteLine($"X (left-right):{leftStickX} : Y (up-down):{leftStickY}");
 
             Console.WriteLine($"static:{this.StaticYArea} : X:{currentXArea}"); // 186639706.25628203
             Console.WriteLine();
         }
-      
+
+        private void StickMovementByQuadrants(double currentXArea, double upDown, double leftRight, Controlls controlls, IKeyboardSimulator keyboard)
+        {
+            if(_currentQuadrant == Quadrant.TopLeft && (currentXArea > leftRight && currentXArea < upDown))
+            {
+                keyboard.KeyDown(controlls.Up);
+                keyboard.KeyDown(controlls.Left);
+            }
+            else if(_currentQuadrant == Quadrant.TopRight && (currentXArea > leftRight && currentXArea < upDown))
+            {
+                keyboard.KeyDown(controlls.Up);
+                keyboard.KeyDown(controlls.Right);
+            }
+            else if(_currentQuadrant == Quadrant.BottomLeft && (currentXArea > leftRight && currentXArea < upDown))
+            {
+                keyboard.KeyDown(controlls.Down);
+                keyboard.KeyDown(controlls.Left);
+            }
+            else if(_currentQuadrant == Quadrant.BottomRight && (currentXArea > leftRight && currentXArea < upDown))
+            {
+                keyboard.KeyDown(controlls.Down);
+                keyboard.KeyDown(controlls.Right);
+            }
+            else
+            {
+                keyboard.KeyUp(controlls.Right);
+                keyboard.KeyUp(controlls.Up);
+                keyboard.KeyUp(controlls.Left);
+                keyboard.KeyUp(controlls.Down);
+            }
+
+
+            if((_currentQuadrant == Quadrant.TopLeft || _currentQuadrant == Quadrant.TopRight) && currentXArea > upDown)
+            {
+                keyboard.KeyDown(controlls.Up);
+            }
+
+            if((_currentQuadrant == Quadrant.TopLeft || _currentQuadrant == Quadrant.BottomLeft) && currentXArea < leftRight)
+            {
+                keyboard.KeyDown(controlls.Left);
+            }
+
+            if((_currentQuadrant == Quadrant.BottomLeft || _currentQuadrant == Quadrant.BottomRight) && currentXArea > upDown)
+            {
+                keyboard.KeyDown(controlls.Down);
+            }
+
+            if((_currentQuadrant == Quadrant.BottomRight || _currentQuadrant == Quadrant.TopRight) && currentXArea < leftRight)
+            {
+                keyboard.KeyDown(controlls.Right);
+            }
+        }
+
     }
 }
 

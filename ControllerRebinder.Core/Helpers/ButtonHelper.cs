@@ -18,23 +18,26 @@ namespace ControllerRebinder.Core.Helpers
             {
                 foreach(var range in ranges)
                 {
-                    foreach(var button in range.Buttons)
+                    await Task.Run(() =>
                     {
-                        await Task.Run(() => _inputSimulator.Keyboard.KeyUp(button));
-                    }
+                        foreach(var button in range.Buttons)
+                        {
+                            _inputSimulator.Keyboard.KeyUp(button);
+                        }
+                    });
                 }
             }
         }
 
         public static async Task PressButtons(List<VirtualKeyCode> buttons)
         {
-           await Task.Run(() =>
-            {
-                foreach(var button in buttons)
-                {
-                    _inputSimulator.Keyboard.KeyDown(button);
-                }
-            });
+            await Task.Run(() =>
+             {
+                 foreach(var button in buttons)
+                 {
+                     _inputSimulator.Keyboard.KeyDown(button);
+                 }
+             });
 
         }
 
