@@ -1,0 +1,35 @@
+{
+  "executable": "ControllerRebinder.ElectronView",
+  "splashscreen": {
+    "imageFile": ""
+  },
+  "name": "ControllerRebinder.ElectronView",
+  "author": "",
+  "singleInstance": false,
+  "environment": "Production",
+  "build": {
+    "appId": "com.ControllerRebinder.ElectronView.app",
+    "productName": "ControllerRebinder.ElectronView",
+    "copyright": "Copyright © 2020",
+    "buildVersion": "1.0.0",
+    "compression": "maximum",
+    "directories": {
+      "output": "../../../bin/Desktop"
+    },
+    "extraResources": [
+      {
+        "from": "./bin",
+        "to": "bin",
+        "filter": [ "**/*" ]
+      }
+    ],
+    "files": [
+      {
+        "from": "./ElectronHostHook/node_modules",
+        "to": "ElectronHostHook/node_modules",
+        "filter": [ "**/*" ]
+      },
+      "**/*"
+    ]
+  }
+}

@@ -10,7 +10,7 @@ namespace ControllerRebinder.Core.Caches
 
         public static void Init()
         {
-            var configurations = File.ReadAllText("appSettings.json");
+            var configurations = File.ReadAllText("appsettings.json");
             Configurations = JsonConvert.DeserializeObject<Configurations>(configurations);
         }
     }
