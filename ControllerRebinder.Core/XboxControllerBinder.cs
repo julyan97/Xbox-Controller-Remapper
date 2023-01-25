@@ -32,8 +32,8 @@ namespace ControllerRebinder.Core
         private bool _didZoneChange = false;
         private bool _didQuadrantChange = false;
 
-        private double StaticYAngle;
         private double StaticYArea;
+        private double _currentXArea;
         public XboxControllerBinder()
         {
             InitCaches();
@@ -52,10 +52,9 @@ namespace ControllerRebinder.Core
 
         public async Task Start()
         {
-            CircleHelper.FindArea(_configuration.LeftJoyStick.ThreshHoldAreaCal, _configuration.LeftJoyStick.MaxValController, _configuration.LeftJoyStick.MaxValController, out StaticYAngle, out StaticYArea);
+            CircleHelper.FindArea(_configuration.LeftJoyStick.ThreshHoldAreaCal, _configuration.LeftJoyStick.MaxValController, _configuration.LeftJoyStick.MaxValController, out double StaticYAngle, out StaticYArea);
             while(true)
             {
-                Console.WriteLine($"Quadrantrs:  {_currentQuadrant} : {_prevQuadrant}");
                 var state = _controller.GetState();
                 var leftStickX = state.Gamepad.LeftThumbX;
                 var leftStickY = state.Gamepad.LeftThumbY;
@@ -69,35 +68,33 @@ namespace ControllerRebinder.Core
 
         private async Task Run_3_0(int leftStickX, int leftStickY)
         {
-
-            ExtractCurrentArea(
-                leftStickX,
-                leftStickY,
-                out double currentXArea);//use to determin position in the quadrant
-
             var upDown = ConfigCache.Configurations.LeftJoyStick.ForwardDown;
             var leftRight = ConfigCache.Configurations.LeftJoyStick.LeftRight;
             var controlls = ConfigCache.Configurations.LeftJoyStick.Controlls;
             var deadZone = ConfigCache.Configurations.LeftJoyStick.DeadZone;
             var keyboard = _inputSimulator.Keyboard;
 
+            Console.WriteLine($"X (left-right):{leftStickX} : Y (up-down):{leftStickY}\nstatic:{this.StaticYArea} : X:{_currentXArea}\n");
+
             if(CircleHelper.isInDeadZone(leftStickX, leftStickY, deadZone))
             {
-                controlls.ReleaseAll(_inputSimulator);
-                
+                await controlls.ReleaseAll(_inputSimulator);
+
             }
             else
             {
-                StickMovementByQuadrants(currentXArea, upDown, leftRight, controlls, keyboard);
-
+                CircleHelper.FindArea(_configuration.LeftJoyStick.ThreshHoldAreaCal, Math.Abs(leftStickX), Math.Abs(leftStickY), out double CurrenrtAngle, out _currentXArea);
+                StickMovementByQuadrants(_currentXArea, upDown, leftRight, controlls, keyboard);
             }
+
             //QuadrantChange ZoneChange
-            CircleHelper.DetectQuadrantChange(leftStickX, leftStickY, ref _currentQuadrant, ref _prevQuadrant, ref _didQuadrantChange);
+            _currentQuadrant = QuadrantHelper.WhereAmI(leftStickX, leftStickY);
+            
         }
 
         private async Task Run_2_0(int leftStickX, int leftStickY)
         {
-            double  currentXArea;
+            double currentXArea;
             var deadZone = ConfigCache.Configurations.LeftJoyStick.DeadZone;
 
 
@@ -106,7 +103,7 @@ namespace ControllerRebinder.Core
                 leftStickY,
                 out currentXArea);//use to determin position in the quadrant
 
-            List<ZoneRange> zones = CircleHelper.InitCurrentZonezForQuadrant(currentXArea, ref _currentQuadrant,ref _currentZone,ref _prevZone, ref InitZones );
+            List<ZoneRange> zones = CircleHelper.InitCurrentZonezForQuadrant(currentXArea, ref _currentQuadrant, ref _currentZone, ref _prevZone, ref InitZones);
 
             Console.WriteLine($"Zones:  {_currentZone.Left},{_currentZone.Right} :  {_prevZone.Left},{_prevZone.Right}");
 
@@ -138,7 +135,7 @@ namespace ControllerRebinder.Core
             }
             //QuadrantChange ZoneChange
             CircleHelper.DetectQuadrantChange(leftStickX, leftStickY, ref _currentQuadrant, ref _prevQuadrant, ref _didQuadrantChange);
-            CircleHelper.DetectZoneChange(currentXArea, zones,ref  _currentZone, ref _prevZone, ref _didZoneChange);
+            CircleHelper.DetectZoneChange(currentXArea, zones, ref _currentZone, ref _prevZone, ref _didZoneChange);
         }
 
         public async Task Run_1_0(int threshold = 21_815)
@@ -188,11 +185,6 @@ namespace ControllerRebinder.Core
         private void ExtractCurrentArea(int leftStickX, int leftStickY, out double currentXArea)
         {
             CircleHelper.FindArea(_configuration.LeftJoyStick.ThreshHoldAreaCal, Math.Abs(leftStickX), Math.Abs(leftStickY), out double CurrenrtAngle, out currentXArea);
-
-            Console.WriteLine($"X (left-right):{leftStickX} : Y (up-down):{leftStickY}");
-
-            Console.WriteLine($"static:{this.StaticYArea} : X:{currentXArea}"); // 186639706.25628203
-            Console.WriteLine();
         }
 
         private void StickMovementByQuadrants(double currentXArea, double upDown, double leftRight, Controlls controlls, IKeyboardSimulator keyboard)
