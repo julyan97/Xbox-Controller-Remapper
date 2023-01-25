@@ -47,7 +47,7 @@ namespace ControllerRebinder.ElectronView.Controllers
             config.Controlls.Right = leftJoyStick.Right;
 
             var data = JsonConvert.SerializeObject(config);
-            System.IO.File.WriteAllText("appsettings.json", data);
+            System.IO.File.WriteAllText("appSettings.json", data);
 
             return RedirectToAction("Index");
         }

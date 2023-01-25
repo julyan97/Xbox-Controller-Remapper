@@ -12,4 +12,10 @@
     <ProjectReference Include="..\ControllerRebinder.Core\ControllerRebinder.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Update="appsettings.json">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
 </Project>
