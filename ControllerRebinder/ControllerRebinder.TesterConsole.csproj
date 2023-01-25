@@ -5,7 +5,12 @@
     <TargetFramework>net5.0</TargetFramework>
     <ImplicitUsings>disable</ImplicitUsings>
     <Nullable>disable</Nullable>
+    <ApplicationIcon>download.ico</ApplicationIcon>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="download.ico" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="DXNET" Version="5.0.0" />

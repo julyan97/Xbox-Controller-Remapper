@@ -68,6 +68,7 @@ namespace ControllerRebinder.Core
 
         private async Task Run_3_0(int leftStickX, int leftStickY)
         {
+            Console.WriteLine("Version 3.0");
             var upDown = ConfigCache.Configurations.LeftJoyStick.ForwardDown;
             var leftRight = ConfigCache.Configurations.LeftJoyStick.LeftRight;
             var controlls = ConfigCache.Configurations.LeftJoyStick.Controlls;
@@ -89,7 +90,6 @@ namespace ControllerRebinder.Core
 
             //QuadrantChange ZoneChange
             _currentQuadrant = QuadrantHelper.WhereAmI(leftStickX, leftStickY);
-            
         }
 
         private async Task Run_2_0(int leftStickX, int leftStickY)
@@ -136,6 +136,7 @@ namespace ControllerRebinder.Core
             //QuadrantChange ZoneChange
             CircleHelper.DetectQuadrantChange(leftStickX, leftStickY, ref _currentQuadrant, ref _prevQuadrant, ref _didQuadrantChange);
             CircleHelper.DetectZoneChange(currentXArea, zones, ref _currentZone, ref _prevZone, ref _didZoneChange);
+            Console.WriteLine("Version 2.0");
         }
 
         public async Task Run_1_0(int threshold = 21_815)
@@ -177,7 +178,7 @@ namespace ControllerRebinder.Core
                     _inputSimulator.Keyboard.KeyUp(VirtualKeyCode.VK_S);
                 }
 
-
+                Console.WriteLine("Version 1.0");
                 await Task.Delay(10);
             }
         }
