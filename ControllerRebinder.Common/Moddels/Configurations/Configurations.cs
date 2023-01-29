@@ -4,6 +4,8 @@ namespace ControllerRebinder.Common.Moddels.Configurations
 {
     public class Configurations
     {
-        public LeftJoyStick LeftJoyStick { get; set; }
+        public BaseJoyStick LeftJoyStick { get; set; }
+        public BaseJoyStick RightJoyStick { get; set; }
+        public Buttons Buttons { get; set; }
     }
 }

@@ -4,9 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ControllerRebinder.Common.Moddels.Configurations.SubModelsOfConfigurations
+namespace ControllerRebinder.Common.Enumerations
 {
-    public class LeftJoyStick : BaseJoyStick
+    public enum JoyStick
     {
+        Left,
+        Right
     }
 }

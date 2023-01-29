@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ControllerRebinder.Common.Moddels.Configurations.SubModelsOfConfigurations
 {
-    public class LeftJoyStick : BaseJoyStick
+    public class RightJoyStick : BaseJoyStick
     {
     }
 }

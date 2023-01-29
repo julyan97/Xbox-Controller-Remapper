@@ -2,6 +2,7 @@
 using ControllerRebinder.Common.Moddels;
 using ControllerRebinder.Common.Moddels.Configurations;
 using ControllerRebinder.Core.Caches;
+using DXNET;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -66,5 +67,11 @@ namespace ControllerRebinder.Core.Helpers
             angle = angle * (180 / Math.PI);
             area = (angle / 360) * Math.PI * Math.Pow(threshold, 2);
         }
+
+        public static void ExtractCurrentArea(int leftStickX, int leftStickY, out double currentXArea, Configurations _configuration)
+        {
+            CircleHelper.FindArea(_configuration.LeftJoyStick.ThreshHoldAreaCal, Math.Abs(leftStickX), Math.Abs(leftStickY), out double CurrenrtAngle, out currentXArea);
+        }
+
     }
 }
