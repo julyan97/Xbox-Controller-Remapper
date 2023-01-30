@@ -3,10 +3,10 @@
     "On": true,
     "Log": true,
 
-    "StaticArea": 186883225.143226,
+    "StaticArea": 18.6883225143226,
 
-    "ForwardDown": 236883225.143226, //Add to make the zone smaller
-    "LeftRight": 146883225.143226, //Subtracked to make the zone Smaller
+    "ForwardDown": 23.6883225143226, //Add to make the zone smaller
+    "LeftRight": 14.6883225143226, //Subtracked to make the zone Smaller
     "DeadZone": 21815,
 
     "MaxValController": 32767,
