@@ -13,10 +13,11 @@ using System.Threading.Tasks;
 using WindowsInput.Native;
 using WindowsInput;
 using DXNET;
+using ControllerRebinder.Core.Services.Imp;
 
 namespace ControllerRebinder.Core.Services
 {
-    public class JoyStickService
+    public class JoyStickService : IJoyStickService
     {
         private Controller _controller;
         private InputSimulator _inputSimulator;

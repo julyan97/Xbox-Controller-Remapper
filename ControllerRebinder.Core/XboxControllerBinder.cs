@@ -6,6 +6,7 @@ using ControllerRebinder.Core.Caches;
 using ControllerRebinder.Core.Helpers;
 using ControllerRebinder.Core.Services;
 using ControllerRebinder.Core.Services.Beta;
+using ControllerRebinder.Core.Services.Imp;
 using DXNET;
 using DXNET.XInput;
 using System;
@@ -21,9 +22,9 @@ namespace ControllerRebinder.Core
     {
         private Controller _controller;
         private InputSimulator _inputSimulator;
-        private JoyStickService _LeftjoyStickService;
-        private JoyStickService _RightjoyStickService;
-        private ButtonsService _ButtonsService;
+        private IJoyStickService _LeftjoyStickService;
+        private IJoyStickService _RightjoyStickService;
+        private IButtonsService _ButtonsService;
 
         public XboxControllerBinder()
         {

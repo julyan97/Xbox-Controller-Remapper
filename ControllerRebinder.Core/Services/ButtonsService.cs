@@ -1,4 +1,5 @@
 ﻿using ControllerRebinder.Common.Moddels.Configurations.SubModelsOfConfigurations;
+using ControllerRebinder.Core.Services.Imp;
 using DXNET.XInput;
 using System;
 using System.Collections.Generic;
@@ -9,7 +10,7 @@ using WindowsInput;
 
 namespace ControllerRebinder.Core.Services
 {
-    public class ButtonsService
+    public class ButtonsService : IButtonsService
     {
         private Controller _controller;
         private InputSimulator _inputSimulator;
