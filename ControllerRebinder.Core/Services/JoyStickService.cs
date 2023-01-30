@@ -66,6 +66,9 @@ namespace ControllerRebinder.Core.Services
             }
         }
 
+        /// <summary>
+        /// instantiates the stickx and sticky depending on which joystick we've chosen
+        /// </summary>
         private void ChooseJoyStick(State state, ref short leftStickX, ref short leftStickY)
         {
             if(_joyStick == JoyStick.Left)
@@ -93,7 +96,7 @@ namespace ControllerRebinder.Core.Services
                  Log(leftStickX, leftStickY);
             }
            
-
+            //DeadZone means no buutons are being press if we are in it
             if(CircleHelper.isInDeadZone(leftStickX, leftStickY, deadZone))
             {
                 await controlls.ReleaseAll(_inputSimulator);
@@ -120,6 +123,9 @@ namespace ControllerRebinder.Core.Services
             Console.WriteLine($"X (left-right):{leftStickX} : Y (up-down):{leftStickY}\nstatic:{StaticYArea} : X:{_currentXArea}\n");
         }
 
+        /// <summary>
+        /// Logic for the buutons that need to be pres in each position for the currentXArea
+        /// </summary>
         private void StickMovementByQuadrants(double currentXArea, double upDown, double leftRight, Controlls controlls, IKeyboardSimulator keyboard)
         {
             if(_currentQuadrant == Quadrant.TopLeft && currentXArea > leftRight && currentXArea < upDown)

@@ -32,6 +32,7 @@ namespace ControllerRebinder.Core
             _controller = new Controller(UserIndex.One);
             _inputSimulator = new InputSimulator();
 
+            //Instantiate logic for the left joystick from configurations
             _LeftjoyStickService = new JoyStickService(
                 _controller,
                 _inputSimulator,
@@ -39,6 +40,7 @@ namespace ControllerRebinder.Core
                 JoyStick.Left,
                 ConfigCache.Configurations.LeftJoyStick.Log);
 
+            //Instantiate logic for the right joystick from configurations
             _RightjoyStickService = new JoyStickService(
                 _controller,
                 _inputSimulator,
@@ -46,6 +48,7 @@ namespace ControllerRebinder.Core
                 JoyStick.Right,
                 ConfigCache.Configurations.RightJoyStick.Log);
 
+            //Instantiate logic for the buttons from configurations
             _ButtonsService = new ButtonsService(
                 _controller, _inputSimulator,
                 ConfigCache.Configurations.Buttons,
