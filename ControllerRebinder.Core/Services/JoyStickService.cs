@@ -28,6 +28,9 @@ namespace ControllerRebinder.Core.Services
         private double StaticYArea;
         private double _currentXArea;
 
+        private const int _ThresholdMultiplier = 100;
+        private const int _AreaMultiplier = 10_000_000;
+
         public JoyStickService(
             Controller controller,
             InputSimulator inputSimulator,
@@ -85,8 +88,8 @@ namespace ControllerRebinder.Core.Services
 
         private async Task Run_3_0(int leftStickX, int leftStickY)
         {
-            var upDown = _configuration.ForwardDown;
-            var leftRight = _configuration.LeftRight;
+            var upDown = _configuration.ForwardDown * _AreaMultiplier;
+            var leftRight = _configuration.LeftRight *_AreaMultiplier ;
             var controlls = _configuration.Controlls;
             var deadZone = _configuration.DeadZone;
             var keyboard = _inputSimulator.Keyboard;

@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using System.Threading.Tasks;
 using WindowsInput;
 using WindowsInput.Native;
 
@@ -6,9 +8,16 @@ namespace ControllerRebinder.Common.Moddels.Configurations.SubModelsOfConfigurat
 {
     public class Controlls
     {
+        [JsonConverter(typeof(StringEnumConverter))]
         public VirtualKeyCode Up { get; set; }
+
+        [JsonConverter(typeof(StringEnumConverter))]
         public VirtualKeyCode Down { get; set; }
+
+        [JsonConverter(typeof(StringEnumConverter))]
         public VirtualKeyCode Left { get; set; }
+        
+        [JsonConverter(typeof(StringEnumConverter))]
         public VirtualKeyCode Right { get; set; }
 
         public async Task ReleaseAll(InputSimulator _inputSimulator)
