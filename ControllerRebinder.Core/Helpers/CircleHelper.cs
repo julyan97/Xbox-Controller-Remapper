@@ -13,7 +13,9 @@ namespace ControllerRebinder.Core.Helpers
 {
     public static class CircleHelper
     {
-
+        /// <summary>
+        /// Use Distance formula for a circle to mesure if you are in the deadZone
+        /// </summary>
         public static bool isInDeadZone(int stickX, int stickY, int deadZone)
         {
             var x = Math.Pow(stickX - 0, 2);
