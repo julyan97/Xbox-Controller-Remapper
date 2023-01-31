@@ -16,7 +16,11 @@ namespace ControllerRebinder.Core.Helpers
 
         public static bool isInDeadZone(int leftStickX, int leftStickY, int deadZone)
         {
-            return Math.Abs(leftStickX) <= deadZone && Math.Abs(leftStickY) <= deadZone;
+            var a = Math.Pow(leftStickX - 0, 2);
+            var b = Math.Pow(leftStickY - 0, 2);
+            var currentPositionInTheCircle = Math.Round(Math.Sqrt(a + b));
+            Console.WriteLine($"current position: {Math.Round(Math.Sqrt(a + b))}");
+            return currentPositionInTheCircle <= deadZone;
         }
 
         public static List<ZoneRange> InitCurrentZonezForQuadrant(double currentXArea, ref Quadrant _currentQuadrant, ref ZoneRange _currentZone, ref ZoneRange _prevZone, ref bool InitZones)
