@@ -14,12 +14,12 @@ namespace ControllerRebinder.Core.Helpers
     public static class CircleHelper
     {
 
-        public static bool isInDeadZone(int leftStickX, int leftStickY, int deadZone)
+        public static bool isInDeadZone(int stickX, int stickY, int deadZone)
         {
-            var a = Math.Pow(leftStickX - 0, 2);
-            var b = Math.Pow(leftStickY - 0, 2);
-            var currentPositionInTheCircle = Math.Round(Math.Sqrt(a + b));
-            Console.WriteLine($"current position: {Math.Round(Math.Sqrt(a + b))}");
+            var x = Math.Pow(stickX - 0, 2);
+            var y = Math.Pow(stickY - 0, 2);
+            var currentPositionInTheCircle = Math.Round(Math.Sqrt(x + y));
+            Console.WriteLine($"current position: {Math.Round(Math.Sqrt(x + y))}");
             return currentPositionInTheCircle <= deadZone;
         }
 
