@@ -26,11 +26,12 @@ namespace ControllerRebinder.Core
         private IJoyStickService _RightjoyStickService;
         private IButtonsService _ButtonsService;
 
-        public XboxControllerBinder()
+        public XboxControllerBinder(Controller controller, InputSimulator inputSimulator)
         {
             InitCaches();
-            _controller = new Controller(UserIndex.One);
-            _inputSimulator = new InputSimulator();
+
+            _controller = controller;
+            _inputSimulator = inputSimulator;
 
             //Instantiate logic for the left joystick from configurations
             _LeftjoyStickService = new JoyStickService(

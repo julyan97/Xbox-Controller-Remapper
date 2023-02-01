@@ -50,8 +50,8 @@ namespace ControllerRebinder.Core.Events
 
         public void Start()
         {
-            var controller = new XboxControllerBinder();
-            controller.Start();
+            //var controller = new XboxControllerBinder();
+            //controller.Start();
             // Task.Run_2_0((Action)ActivateOrDeactivatedEevnt);
         }
 
