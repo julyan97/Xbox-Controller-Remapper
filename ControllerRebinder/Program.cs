@@ -2,9 +2,10 @@
 using System;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using WindowsInput;
 using DXNET.XInput;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Hosting;
 
 namespace ControllerRebinder
 {
@@ -13,16 +14,12 @@ namespace ControllerRebinder
         static async Task Main(string[] args)
         {
 
-            var serviceProvider = new ServiceCollection()
-                .AddSingleton<Controller>(new Controller(UserIndex.One))
-                .AddSingleton<InputSimulator>()
-                .AddTransient<XboxControllerBinder>()
-                .BuildServiceProvider();
+            var serviceProvider = CreateHostBuilder(args).Build();
 
             Start:
             try
             {
-                var controllerRebinder = serviceProvider.GetService<XboxControllerBinder>();
+                var controllerRebinder = serviceProvider.Services.GetService<XboxControllerBinder>();
                 await controllerRebinder.Start();
             }
             catch(Exception ex)
@@ -31,6 +28,19 @@ namespace ControllerRebinder
             }
 
         }
+
+        static IHostBuilder CreateHostBuilder(string[] args) =>
+            Host.CreateDefaultBuilder(args)
+            .ConfigureServices((_, services) =>
+            {
+                services.AddSingleton<Controller>(new Controller(UserIndex.One))
+                        .AddSingleton<InputSimulator>()
+                        .AddTransient<XboxControllerBinder>();
+
+            }).ConfigureLogging((_, logging) =>
+            {
+                logging.ClearProviders();
+                logging.AddSimpleConsole(options => options.IncludeScopes = true);
+            });
     }
 }
-
