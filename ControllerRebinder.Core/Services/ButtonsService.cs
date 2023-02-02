@@ -2,9 +2,6 @@
 using ControllerRebinder.Core.Services.Imp;
 using DXNET.XInput;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using WindowsInput;
 
@@ -36,10 +33,10 @@ namespace ControllerRebinder.Core.Services
                 var state = _controller.GetState();
                 var button = state.Gamepad.Buttons;
                 if(_log)
-                { 
+                {
                     Console.WriteLine(button);
                 }
-                
+
                 await Run(button);
 
                 await Task.Delay(10);

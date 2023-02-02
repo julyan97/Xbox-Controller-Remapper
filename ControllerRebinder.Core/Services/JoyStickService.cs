@@ -1,19 +1,11 @@
 ﻿using ControllerRebinder.Common.Enumerations;
 using ControllerRebinder.Common.Moddels.Configurations.SubModelsOfConfigurations;
-using ControllerRebinder.Common.Moddels.Configurations;
-using ControllerRebinder.Common.Moddels;
-using ControllerRebinder.Core.Caches;
 using ControllerRebinder.Core.Helpers;
+using ControllerRebinder.Core.Services.Imp;
 using DXNET.XInput;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using WindowsInput.Native;
 using WindowsInput;
-using DXNET;
-using ControllerRebinder.Core.Services.Imp;
 
 namespace ControllerRebinder.Core.Services
 {
@@ -89,16 +81,16 @@ namespace ControllerRebinder.Core.Services
         private async Task Run_3_0(int leftStickX, int leftStickY)
         {
             var upDown = _configuration.ForwardDown * _AreaMultiplier;
-            var leftRight = _configuration.LeftRight *_AreaMultiplier ;
+            var leftRight = _configuration.LeftRight * _AreaMultiplier;
             var controlls = _configuration.Controlls;
             var deadZone = _configuration.DeadZone;
             var keyboard = _inputSimulator.Keyboard;
 
             if(_log)
             {
-                 Log(leftStickX, leftStickY);
+                Log(leftStickX, leftStickY);
             }
-           
+
             //DeadZone means no buutons are being press if we are in it
             if(CircleHelper.isInDeadZone(leftStickX, leftStickY, deadZone))
             {

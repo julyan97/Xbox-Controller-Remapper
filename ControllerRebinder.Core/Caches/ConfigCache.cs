@@ -13,8 +13,8 @@ namespace ControllerRebinder.Core.Caches
             var configurations = File.ReadAllText("Configurations.json");
             Configurations = JsonConvert.DeserializeObject<Configurations>(configurations);
 
-           // var test = JsonConvert.SerializeObject(Configurations, Formatting.Indented);
-           // File.WriteAllText("./test", test);
+            // var test = JsonConvert.SerializeObject(Configurations, Formatting.Indented);
+            // File.WriteAllText("./test", test);
         }
     }
 }

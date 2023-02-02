@@ -16,19 +16,19 @@ namespace ControllerRebinder.Common.Moddels.Configurations.SubModelsOfConfigurat
 
         [JsonConverter(typeof(StringEnumConverter))]
         public VirtualKeyCode Left { get; set; }
-        
+
         [JsonConverter(typeof(StringEnumConverter))]
         public VirtualKeyCode Right { get; set; }
 
         public async Task ReleaseAll(InputSimulator _inputSimulator)
         {
-           await Task.Run(() =>
-            {
-                _inputSimulator.Keyboard.KeyUp(Up);
-                _inputSimulator.Keyboard.KeyUp(Down);
-                _inputSimulator.Keyboard.KeyUp(Left);
-                _inputSimulator.Keyboard.KeyUp(Right);
-            });
+            await Task.Run(() =>
+             {
+                 _inputSimulator.Keyboard.KeyUp(Up);
+                 _inputSimulator.Keyboard.KeyUp(Down);
+                 _inputSimulator.Keyboard.KeyUp(Left);
+                 _inputSimulator.Keyboard.KeyUp(Right);
+             });
 
         }
     }

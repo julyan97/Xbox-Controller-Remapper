@@ -1,17 +1,16 @@
 ﻿using ControllerRebinder.Common.Enumerations;
-using ControllerRebinder.Common.Moddels.Configurations;
 using ControllerRebinder.Common.Moddels;
+using ControllerRebinder.Common.Moddels.Configurations;
+using ControllerRebinder.Common.Moddels.Configurations.SubModelsOfConfigurations;
+using ControllerRebinder.Core.Caches;
+using ControllerRebinder.Core.Helpers;
 using DXNET.XInput;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using WindowsInput.Native;
 using WindowsInput;
-using ControllerRebinder.Core.Caches;
-using ControllerRebinder.Core.Helpers;
-using ControllerRebinder.Common.Moddels.Configurations.SubModelsOfConfigurations;
+using WindowsInput.Native;
 
 namespace ControllerRebinder.Core.Services.Beta
 {
@@ -47,7 +46,7 @@ namespace ControllerRebinder.Core.Services.Beta
         public async Task Start()
         {
             CircleHelper.FindArea(_configuration.LeftJoyStick.ThreshHoldAreaCal, _configuration.LeftJoyStick.MaxValController, _configuration.LeftJoyStick.MaxValController, out double StaticYAngle, out StaticYArea);
-            while (true)
+            while(true)
             {
                 var state = _controller.GetState();
                 var leftStickX = state.Gamepad.LeftThumbX;
@@ -70,7 +69,7 @@ namespace ControllerRebinder.Core.Services.Beta
 
             Console.WriteLine($"X (left-right):{leftStickX} : Y (up-down):{leftStickY}\nstatic:{StaticYArea} : X:{_currentXArea}\n");
 
-            if (CircleHelper.isInDeadZone(leftStickX, leftStickY, deadZone))
+            if(CircleHelper.isInDeadZone(leftStickX, leftStickY, deadZone))
             {
                 await controlls.ReleaseAll(_inputSimulator);
 
@@ -101,20 +100,20 @@ namespace ControllerRebinder.Core.Services.Beta
 
             Console.WriteLine($"Zones:  {_currentZone.Left},{_currentZone.Right} :  {_prevZone.Left},{_prevZone.Right}");
 
-            if (CircleHelper.isInDeadZone(leftStickX, leftStickY, deadZone))
+            if(CircleHelper.isInDeadZone(leftStickX, leftStickY, deadZone))
             {
 
                 var shouldRelease = _prevZone.Buttons;
-                if (shouldRelease != releasedButtons)
+                if(shouldRelease != releasedButtons)
                 {
                     await ButtonHelper.ReleaseButtons(shouldRelease);
                 }
                 releasedButtons = shouldRelease;
             }
-            else if (_didQuadrantChange || _didZoneChange)
+            else if(_didQuadrantChange || _didZoneChange)
             {
                 var shouldRelease = _prevZone.Buttons.Where(x => !_currentZone.Buttons.Contains(x)).ToList();
-                if (shouldRelease != releasedButtons)
+                if(shouldRelease != releasedButtons)
                 {
                     await ButtonHelper.ReleaseButtons(shouldRelease);
                 }
@@ -135,7 +134,7 @@ namespace ControllerRebinder.Core.Services.Beta
 
         public async Task Run_1_0(int threshold = 21_815)
         {
-            while (true)
+            while(true)
             {
                 var state = _controller.GetState();
                 var leftStickX = state.Gamepad.LeftThumbX;
@@ -144,11 +143,11 @@ namespace ControllerRebinder.Core.Services.Beta
                 Console.WriteLine($"{leftStickX} : {leftStickY}");
 
                 // Check left stick movement on the X axis
-                if (leftStickX > threshold)
+                if(leftStickX > threshold)
                 {
                     _inputSimulator.Keyboard.KeyDown(VirtualKeyCode.VK_D);
                 }
-                else if (leftStickX < -threshold)
+                else if(leftStickX < -threshold)
                 {
                     _inputSimulator.Keyboard.KeyDown(VirtualKeyCode.VK_A);
                 }
@@ -158,11 +157,11 @@ namespace ControllerRebinder.Core.Services.Beta
                     _inputSimulator.Keyboard.KeyUp(VirtualKeyCode.VK_A);
                 }
                 // Check left stick movement on the Y axis
-                if (leftStickY > threshold)
+                if(leftStickY > threshold)
                 {
                     _inputSimulator.Keyboard.KeyDown(VirtualKeyCode.VK_W);
                 }
-                else if (leftStickY < -threshold)
+                else if(leftStickY < -threshold)
                 {
                     _inputSimulator.Keyboard.KeyDown(VirtualKeyCode.VK_S);
                 }
@@ -179,22 +178,22 @@ namespace ControllerRebinder.Core.Services.Beta
 
         private void StickMovementByQuadrants(double currentXArea, double upDown, double leftRight, Controlls controlls, IKeyboardSimulator keyboard)
         {
-            if (_currentQuadrant == Quadrant.TopLeft && currentXArea > leftRight && currentXArea < upDown)
+            if(_currentQuadrant == Quadrant.TopLeft && currentXArea > leftRight && currentXArea < upDown)
             {
                 keyboard.KeyDown(controlls.Up);
                 keyboard.KeyDown(controlls.Left);
             }
-            else if (_currentQuadrant == Quadrant.TopRight && currentXArea > leftRight && currentXArea < upDown)
+            else if(_currentQuadrant == Quadrant.TopRight && currentXArea > leftRight && currentXArea < upDown)
             {
                 keyboard.KeyDown(controlls.Up);
                 keyboard.KeyDown(controlls.Right);
             }
-            else if (_currentQuadrant == Quadrant.BottomLeft && currentXArea > leftRight && currentXArea < upDown)
+            else if(_currentQuadrant == Quadrant.BottomLeft && currentXArea > leftRight && currentXArea < upDown)
             {
                 keyboard.KeyDown(controlls.Down);
                 keyboard.KeyDown(controlls.Left);
             }
-            else if (_currentQuadrant == Quadrant.BottomRight && currentXArea > leftRight && currentXArea < upDown)
+            else if(_currentQuadrant == Quadrant.BottomRight && currentXArea > leftRight && currentXArea < upDown)
             {
                 keyboard.KeyDown(controlls.Down);
                 keyboard.KeyDown(controlls.Right);
@@ -208,22 +207,22 @@ namespace ControllerRebinder.Core.Services.Beta
             }
 
 
-            if ((_currentQuadrant == Quadrant.TopLeft || _currentQuadrant == Quadrant.TopRight) && currentXArea > upDown)
+            if((_currentQuadrant == Quadrant.TopLeft || _currentQuadrant == Quadrant.TopRight) && currentXArea > upDown)
             {
                 keyboard.KeyDown(controlls.Up);
             }
 
-            if ((_currentQuadrant == Quadrant.TopLeft || _currentQuadrant == Quadrant.BottomLeft) && currentXArea < leftRight)
+            if((_currentQuadrant == Quadrant.TopLeft || _currentQuadrant == Quadrant.BottomLeft) && currentXArea < leftRight)
             {
                 keyboard.KeyDown(controlls.Left);
             }
 
-            if ((_currentQuadrant == Quadrant.BottomLeft || _currentQuadrant == Quadrant.BottomRight) && currentXArea > upDown)
+            if((_currentQuadrant == Quadrant.BottomLeft || _currentQuadrant == Quadrant.BottomRight) && currentXArea > upDown)
             {
                 keyboard.KeyDown(controlls.Down);
             }
 
-            if ((_currentQuadrant == Quadrant.BottomRight || _currentQuadrant == Quadrant.TopRight) && currentXArea < leftRight)
+            if((_currentQuadrant == Quadrant.BottomRight || _currentQuadrant == Quadrant.TopRight) && currentXArea < leftRight)
             {
                 keyboard.KeyDown(controlls.Right);
             }

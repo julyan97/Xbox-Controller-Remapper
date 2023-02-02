@@ -1,10 +1,5 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using WindowsInput.Native;
 
 namespace ControllerRebinder.Common.Moddels.Configurations.SubModelsOfConfigurations
@@ -30,7 +25,9 @@ namespace ControllerRebinder.Common.Moddels.Configurations.SubModelsOfConfigurat
         [JsonConverter(typeof(StringEnumConverter))]
         public VirtualKeyCode DPadLeft { get; set; }
         [JsonConverter(typeof(StringEnumConverter))]
-        public VirtualKeyCode DPadRight { get; set; 
+        public VirtualKeyCode DPadRight
+        {
+            get; set;
         }
     }
 }

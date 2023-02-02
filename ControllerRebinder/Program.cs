@@ -1,11 +1,10 @@
 ﻿using ControllerRebinder.Core;
+using ControllerRebinder.TesterConsole;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
-using WindowsInput;
-using DXNET.XInput;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Hosting;
 
 namespace ControllerRebinder
 {
@@ -33,14 +32,15 @@ namespace ControllerRebinder
             Host.CreateDefaultBuilder(args)
             .ConfigureServices((_, services) =>
             {
-                services.AddSingleton<Controller>(new Controller(UserIndex.One))
-                        .AddSingleton<InputSimulator>()
-                        .AddTransient<XboxControllerBinder>();
+                services.ConfigureServices();
 
             }).ConfigureLogging((_, logging) =>
             {
                 logging.ClearProviders();
                 logging.AddSimpleConsole(options => options.IncludeScopes = true);
             });
+
+
+
     }
 }

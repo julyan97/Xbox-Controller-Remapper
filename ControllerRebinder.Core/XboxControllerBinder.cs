@@ -1,20 +1,11 @@
 ﻿using ControllerRebinder.Common.Enumerations;
-using ControllerRebinder.Common.Moddels;
-using ControllerRebinder.Common.Moddels.Configurations;
-using ControllerRebinder.Common.Moddels.Configurations.SubModelsOfConfigurations;
 using ControllerRebinder.Core.Caches;
-using ControllerRebinder.Core.Helpers;
 using ControllerRebinder.Core.Services;
-using ControllerRebinder.Core.Services.Beta;
 using ControllerRebinder.Core.Services.Imp;
-using DXNET;
 using DXNET.XInput;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using WindowsInput;
-using WindowsInput.Native;
 
 namespace ControllerRebinder.Core
 {

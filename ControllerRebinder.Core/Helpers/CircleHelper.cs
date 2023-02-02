@@ -2,12 +2,8 @@
 using ControllerRebinder.Common.Moddels;
 using ControllerRebinder.Common.Moddels.Configurations;
 using ControllerRebinder.Core.Caches;
-using DXNET;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ControllerRebinder.Core.Helpers
 {
