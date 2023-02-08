@@ -1,4 +1,5 @@
 ﻿using ControllerRebinder.Common.Moddels.Configurations.SubModelsOfConfigurations;
+using ControllerRebinder.Core.Helpers;
 using ControllerRebinder.Core.Services.Imp;
 using DXNET.XInput;
 using System;
@@ -34,6 +35,7 @@ namespace ControllerRebinder.Core.Services
                 var button = state.Gamepad.Buttons;
                 if(_log)
                 {
+                    ConsoleHelper.ClearConsole();
                     Console.WriteLine(button);
                 }
 

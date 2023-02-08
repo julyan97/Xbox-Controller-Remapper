@@ -4,6 +4,7 @@ using ControllerRebinder.Core.Services;
 using ControllerRebinder.Core.Services.Imp;
 using DXNET.XInput;
 using System;
+using System.IO;
 using System.Threading.Tasks;
 using WindowsInput;
 
@@ -28,17 +29,13 @@ namespace ControllerRebinder.Core
             _LeftjoyStickService = new JoyStickService(
                 _controller,
                 _inputSimulator,
-                ConfigCache.Configurations.LeftJoyStick,
-                JoyStick.Left,
-                ConfigCache.Configurations.LeftJoyStick.Log);
+                JoyStick.Left);
 
             //Instantiate logic for the right joystick from configurations
             _RightjoyStickService = new JoyStickService(
                 _controller,
                 _inputSimulator,
-                ConfigCache.Configurations.RightJoyStick,
-                JoyStick.Right,
-                ConfigCache.Configurations.RightJoyStick.Log);
+                JoyStick.Right);
 
             //Instantiate logic for the buttons from configurations
             _ButtonsService = new ButtonsService(

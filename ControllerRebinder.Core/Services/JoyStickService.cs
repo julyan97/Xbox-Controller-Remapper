@@ -1,5 +1,6 @@
 ﻿using ControllerRebinder.Common.Enumerations;
 using ControllerRebinder.Common.Moddels.Configurations.SubModelsOfConfigurations;
+using ControllerRebinder.Core.Caches;
 using ControllerRebinder.Core.Helpers;
 using ControllerRebinder.Core.Services.Imp;
 using DXNET.XInput;
@@ -13,9 +14,7 @@ namespace ControllerRebinder.Core.Services
     {
         private Controller _controller;
         private InputSimulator _inputSimulator;
-        private BaseJoyStick _configuration;
         private JoyStick _joyStick;
-        private bool _log;
         private Quadrant _currentQuadrant = Quadrant.TopLeft;
         private double StaticYArea;
         private double _currentXArea;
@@ -26,23 +25,21 @@ namespace ControllerRebinder.Core.Services
         public JoyStickService(
             Controller controller,
             InputSimulator inputSimulator,
-            BaseJoyStick configurations,
-            JoyStick joyStick,
-            bool log)
+            JoyStick joyStick)
         {
             _controller = controller;
             _inputSimulator = inputSimulator;
-            _configuration = configurations;
             _joyStick = joyStick;
-            _log = log;
+
+            
         }
 
         public async Task Start()
         {
             CircleHelper.FindArea(
-                _configuration.ThreshHoldAreaCal,
-                _configuration.MaxValController,
-                _configuration.MaxValController,
+                ConfigCache.Configurations.LeftJoyStick.ThreshHoldAreaCal,
+                ConfigCache.Configurations.LeftJoyStick.MaxValController,
+                ConfigCache.Configurations.LeftJoyStick.MaxValController,
                 out double StaticYAngle,
                 out StaticYArea);
 
@@ -80,13 +77,13 @@ namespace ControllerRebinder.Core.Services
 
         private async Task Run_3_0(int leftStickX, int leftStickY)
         {
-            var upDown = _configuration.ForwardDown * _AreaMultiplier;
-            var leftRight = _configuration.LeftRight * _AreaMultiplier;
-            var controlls = _configuration.Controlls;
-            var deadZone = _configuration.DeadZone;
+            var upDown = ConfigCache.Configurations.LeftJoyStick.ForwardDown * _AreaMultiplier;
+            var leftRight = ConfigCache.Configurations.LeftJoyStick.LeftRight * _AreaMultiplier;
+            var controlls = ConfigCache.Configurations.LeftJoyStick.Controlls;
+            var deadZone = ConfigCache.Configurations.LeftJoyStick.DeadZone;
             var keyboard = _inputSimulator.Keyboard;
 
-            if(_log)
+            if(ConfigCache.Configurations.LeftJoyStick.Log)
             {
                 Log(leftStickX, leftStickY);
             }
@@ -100,7 +97,7 @@ namespace ControllerRebinder.Core.Services
             else
             {
                 CircleHelper.FindArea(
-                    _configuration.ThreshHoldAreaCal,
+                    ConfigCache.Configurations.LeftJoyStick.ThreshHoldAreaCal,
                     Math.Abs(leftStickX), Math.Abs(leftStickY),
                     out double CurrenrtAngle,
                     out _currentXArea);
@@ -114,6 +111,7 @@ namespace ControllerRebinder.Core.Services
 
         private void Log(int leftStickX, int leftStickY)
         {
+            ConsoleHelper.ClearConsole();
             Console.WriteLine("Version 3.0");
             Console.WriteLine($"X (left-right):{leftStickX} : Y (up-down):{leftStickY}\nstatic:{StaticYArea} : X:{_currentXArea}\n");
         }
