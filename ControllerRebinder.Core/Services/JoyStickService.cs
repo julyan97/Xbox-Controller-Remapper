@@ -31,7 +31,7 @@ namespace ControllerRebinder.Core.Services
             _inputSimulator = inputSimulator;
             _joyStick = joyStick;
 
-            
+
         }
 
         public async Task Start()
@@ -111,9 +111,12 @@ namespace ControllerRebinder.Core.Services
 
         private void Log(int leftStickX, int leftStickY)
         {
-            ConsoleHelper.ClearConsole();
-            Console.WriteLine("Version 3.0");
-            Console.WriteLine($"X (left-right):{leftStickX} : Y (up-down):{leftStickY}\nstatic:{StaticYArea} : X:{_currentXArea}\n");
+            Task.Run(() =>
+            {
+                ConsoleHelper.ClearConsole();
+                Console.WriteLine("Version 3.0");
+                Console.WriteLine($"X (left-right):{leftStickX} : Y (up-down):{leftStickY}\nstatic:{StaticYArea} : X:{_currentXArea}\n");
+            });
         }
 
         /// <summary>

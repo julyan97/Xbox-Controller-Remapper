@@ -35,14 +35,22 @@ namespace ControllerRebinder.Core.Services
                 var button = state.Gamepad.Buttons;
                 if(_log)
                 {
-                    ConsoleHelper.ClearConsole();
-                    Console.WriteLine(button);
+                    Log(button);
                 }
 
                 await Run(button);
 
                 await Task.Delay(10);
             }
+        }
+
+        private void Log(GamepadButtonFlags button)
+        {
+            Task.Run(() =>
+            {
+                ConsoleHelper.ClearConsole();
+                Console.WriteLine(button);
+            });
         }
 
         private async Task Run(GamepadButtonFlags button)
