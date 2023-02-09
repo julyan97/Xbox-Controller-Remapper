@@ -54,7 +54,7 @@ namespace ControllerRebinder.Core.Services
 
                 await Run_3_0(stickX, stickY);
 
-                await Task.Delay(10);
+                await Task.Delay(ConfigCache.Configurations.RefreshRate);
             }
         }
 

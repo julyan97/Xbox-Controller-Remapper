@@ -1,4 +1,5 @@
 ﻿using ControllerRebinder.Common.Moddels.Configurations.SubModelsOfConfigurations;
+using ControllerRebinder.Core.Caches;
 using ControllerRebinder.Core.Helpers;
 using ControllerRebinder.Core.Services.Imp;
 using DXNET.XInput;
@@ -40,10 +41,9 @@ namespace ControllerRebinder.Core.Services
 
                 await Run(button);
 
-                await Task.Delay(10);
+                await Task.Delay(ConfigCache.Configurations.RefreshRate);
             }
         }
-
         private void Log(GamepadButtonFlags button)
         {
             Task.Run(() =>

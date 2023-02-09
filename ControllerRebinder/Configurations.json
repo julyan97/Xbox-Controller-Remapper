@@ -1,4 +1,6 @@
 {
+  "RefreshRate": 1,
+
   "LeftJoyStick": {
     "On": true,
     "Log": true,
