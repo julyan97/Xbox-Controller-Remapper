@@ -17,7 +17,6 @@ namespace ControllerRebinder.Core.Helpers
             var x = Math.Pow(stickX - 0, 2);
             var y = Math.Pow(stickY - 0, 2);
             var currentPositionInTheCircle = Math.Round(Math.Sqrt(x + y));
-            Console.WriteLine($"current position: {Math.Round(Math.Sqrt(x + y))}");
             return currentPositionInTheCircle <= deadZone;
         }
 
