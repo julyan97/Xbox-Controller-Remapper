@@ -4,6 +4,7 @@ using ControllerRebinder.Core.Caches;
 using ControllerRebinder.Core.Helpers;
 using ControllerRebinder.Core.Services.Imp;
 using DXNET.XInput;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
 using WindowsInput;
@@ -15,6 +16,7 @@ namespace ControllerRebinder.Core.Services
         private Controller _controller;
         private InputSimulator _inputSimulator;
         private JoyStick _joyStick;
+        private readonly ILogger _logger;
         private Quadrant _currentQuadrant = Quadrant.TopLeft;
         private double StaticYArea;
         private double _currentXArea;
@@ -25,12 +27,13 @@ namespace ControllerRebinder.Core.Services
         public JoyStickService(
             Controller controller,
             InputSimulator inputSimulator,
-            JoyStick joyStick)
+            JoyStick joyStick,
+            ILogger logger)
         {
             _controller = controller;
             _inputSimulator = inputSimulator;
             _joyStick = joyStick;
-
+            _logger = logger;
 
         }
 
@@ -83,13 +86,10 @@ namespace ControllerRebinder.Core.Services
             var deadZone = ConfigCache.Configurations.LeftJoyStick.DeadZone;
             var keyboard = _inputSimulator.Keyboard;
 
-            if(ConfigCache.Configurations.LeftJoyStick.Log)
-            {
-                Log(leftStickX, leftStickY);
-            }
+            Log(leftStickX, leftStickY);
 
             //DeadZone means no buutons are being press if we are in it
-            if(CircleHelper.isInDeadZone(leftStickX, leftStickY, deadZone))
+            if(CircleHelper.isInDeadZone(leftStickX, leftStickY, deadZone, _logger))
             {
                 await controlls.ReleaseAll(_inputSimulator);
 
@@ -111,12 +111,12 @@ namespace ControllerRebinder.Core.Services
 
         private void Log(int leftStickX, int leftStickY)
         {
-            Task.Run(() =>
+            if(ConfigCache.Configurations.Log)
             {
                 ConsoleHelper.ClearConsole();
-                Console.WriteLine("Version 3.0");
-                Console.WriteLine($"X (left-right):{leftStickX} : Y (up-down):{leftStickY}\nstatic:{StaticYArea} : X:{_currentXArea}\n");
-            });
+                _logger.LogInformation("Version 3.0");
+                _logger.LogInformation($"X (left-right):{leftStickX} : Y (up-down):{leftStickY}\nstatic:{StaticYArea} : X:{_currentXArea}\n");
+            }
         }
 
         /// <summary>

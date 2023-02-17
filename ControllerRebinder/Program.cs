@@ -1,4 +1,5 @@
 ﻿using ControllerRebinder.Core;
+using ControllerRebinder.Core.Caches;
 using ControllerRebinder.TesterConsole;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -12,9 +13,9 @@ namespace ControllerRebinder
     {
         static async Task Main(string[] args)
         {
-
+            ConfigCache.Init();
             var serviceProvider = CreateHostBuilder(args).Build();
-
+            
             Start:
             try
             {
@@ -36,8 +37,11 @@ namespace ControllerRebinder
 
             }).ConfigureLogging((_, logging) =>
             {
-                logging.ClearProviders();
-                logging.AddSimpleConsole(options => options.IncludeScopes = true);
+                if(ConfigCache.Configurations.Log)
+                {
+                    logging.ClearProviders();
+                    logging.AddConsole();
+                }
             });
 
 

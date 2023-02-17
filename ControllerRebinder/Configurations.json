@@ -1,9 +1,9 @@
 {
   "RefreshRate": 1,
+  "Log": true,
 
   "LeftJoyStick": {
     "On": true,
-    "Log": true,
 
     "StaticArea": 18.7,
 
@@ -24,7 +24,6 @@
 
   "RightJoyStick": {
     "On": false,
-    "Log": false,
 
     "StaticArea": 18.7,
 
@@ -45,7 +44,6 @@
 
   "Buttons": {
     "On": false,
-    "Log": false,
 
     "X": "VK_I",
     "Y": "VK_I",

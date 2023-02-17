@@ -2,6 +2,7 @@
 using ControllerRebinder.Common.Moddels;
 using ControllerRebinder.Common.Moddels.Configurations;
 using ControllerRebinder.Core.Caches;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 
@@ -12,13 +13,16 @@ namespace ControllerRebinder.Core.Helpers
         /// <summary>
         /// Use Distance formula for a circle to mesure if you are in the deadZone
         /// </summary>
-        public static bool isInDeadZone(int stickX, int stickY, int deadZone)
+        public static bool isInDeadZone(int stickX, int stickY, int deadZone, ILogger logger = null)
         {
             var x = Math.Pow(stickX - 0, 2);
             var y = Math.Pow(stickY - 0, 2);
             var currentPositionInTheCircle = Math.Round(Math.Sqrt(x + y));
+            logger?.LogInformation($"Current Position: {currentPositionInTheCircle}");
             return currentPositionInTheCircle <= deadZone;
         }
+
+
 
         public static List<ZoneRange> InitCurrentZonezForQuadrant(double currentXArea, ref Quadrant _currentQuadrant, ref ZoneRange _currentZone, ref ZoneRange _prevZone, ref bool InitZones)
         {

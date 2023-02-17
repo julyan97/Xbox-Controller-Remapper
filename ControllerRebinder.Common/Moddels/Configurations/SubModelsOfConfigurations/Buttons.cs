@@ -7,7 +7,6 @@ namespace ControllerRebinder.Common.Moddels.Configurations.SubModelsOfConfigurat
     public class Buttons
     {
         public bool On { get; set; }
-        public bool Log { get; set; }
 
         [JsonConverter(typeof(StringEnumConverter))]
         public VirtualKeyCode X { get; set; }

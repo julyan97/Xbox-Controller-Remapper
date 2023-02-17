@@ -3,7 +3,6 @@
     public class BaseJoyStick
     {
         public bool On { get; set; }
-        public bool Log { get; set; }
         public int RefreshRate { get; set; }
         public double StaticArea { get; set; }
         public double ForwardDown { get; set; }
