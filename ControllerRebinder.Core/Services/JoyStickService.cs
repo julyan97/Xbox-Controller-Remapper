@@ -114,8 +114,9 @@ namespace ControllerRebinder.Core.Services
             if(ConfigCache.Configurations.Log)
             {
                 ConsoleHelper.ClearConsole();
-                _logger.LogInformation("Version 3.0");
-                _logger.LogInformation($"X (left-right):{leftStickX} : Y (up-down):{leftStickY}\nstatic:{StaticYArea} : X:{_currentXArea}\n");
+                _logger.LogInformation("Version 3.0\n");
+                _logger.LogInformation($"X (left-right):{leftStickX} : Y (up-down):{leftStickY}\n");
+                _logger.LogInformation($"static:{StaticYArea} : X:{_currentXArea}\n");
             }
         }
 
