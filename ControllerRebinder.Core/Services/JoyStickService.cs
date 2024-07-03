@@ -7,6 +7,7 @@ using ControllerRebinder.Core.Services.Imp;
 using DXNET.XInput;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using WindowsInput;
 
@@ -21,6 +22,8 @@ public class JoyStickService : IJoyStickService
     private Quadrant _currentQuadrant = Quadrant.TopLeft;
     private double _staticYArea;
     private double _currentXArea;
+
+    private Timer _timer;
 
     private const int ThresholdMultiplier = 100;
     private const int AreaMultiplier = 10_000_000;
@@ -42,6 +45,7 @@ public class JoyStickService : IJoyStickService
     public async Task Start()
     {
         var config = ConfigCache.Configurations.LeftJoyStick;
+
         CircleHelper.FindArea(
             config.ThreshHoldAreaCal,
             config.MaxValController,
@@ -49,17 +53,18 @@ public class JoyStickService : IJoyStickService
             out double staticYAngle,
             out _staticYArea);
 
-        while (true)
-        {
-            var state = _controller.GetState();
-            short stickX = 0;
-            short stickY = 0;
+        _timer = new Timer(CheckJoystickState, null, 0, ConfigCache.Configurations.RefreshRate);
 
-            ChooseJoyStick(state, ref stickX, ref stickY);
-            OnJoyStickMoved(stickX, stickY);
+    }
 
-            await Task.Delay(ConfigCache.Configurations.RefreshRate).ConfigureAwait(false);
-        }
+    private void CheckJoystickState(object state)
+    {
+        var controllerState = _controller.GetState();
+        short stickX = 0;
+        short stickY = 0;
+
+        ChooseJoyStick(controllerState, ref stickX, ref stickY);
+        OnJoyStickMoved(stickX, stickY);
     }
 
     private void ChooseJoyStick(State state, ref short stickX, ref short stickY)
