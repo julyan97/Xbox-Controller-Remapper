@@ -1,26 +1,21 @@
 ﻿using ControllerRebinder.Common.Moddels.Configurations.SubModelsOfConfigurations;
 using ControllerRebinder.Core.Caches;
 using ControllerRebinder.Core.Helpers;
-using ControllerRebinder.Core.Services.Imp;
 using DXNET.XInput;
 using System;
 using System.Threading.Tasks;
 using WindowsInput;
 
-namespace ControllerRebinder.Core.Services
+namespace ControllerRebinder.Core.Services.Imp
 {
     public class ButtonsService : IButtonsService
     {
-        private Controller _controller;
-        private InputSimulator _inputSimulator;
-        private Buttons _configurations;
-        private bool _log;
+        private readonly Controller _controller;
+        private readonly InputSimulator _inputSimulator;
+        private readonly Buttons _configurations;
+        private readonly bool _log;
 
-        public ButtonsService(
-            Controller controller,
-            InputSimulator inputSimulator,
-            Buttons configurations,
-            bool log)
+        public ButtonsService(Controller controller, InputSimulator inputSimulator, Buttons configurations, bool log)
         {
             _controller = controller;
             _inputSimulator = inputSimulator;
@@ -30,64 +25,38 @@ namespace ControllerRebinder.Core.Services
 
         public async Task Start()
         {
-            while(true)
+            while (true)
             {
                 var state = _controller.GetState();
                 var button = state.Gamepad.Buttons;
-                if(_log)
+                if (_log)
                 {
                     Log(button);
                 }
 
-                await Run(button);
-
+                await ExecuteButtonPress(button);
                 await Task.Delay(ConfigCache.Configurations.RefreshRate);
             }
         }
+
         private void Log(GamepadButtonFlags button)
         {
-            Task.Run(() =>
-            {
-                ConsoleHelper.ClearConsole();
-                Console.WriteLine(button);
-            });
+            ConsoleHelper.ClearConsole();
+            Console.WriteLine(button);
         }
 
-        private async Task Run(GamepadButtonFlags button)
+        private async Task ExecuteButtonPress(GamepadButtonFlags button)
         {
-            if(button == GamepadButtonFlags.X)
-            {
-                _inputSimulator.Keyboard.KeyPress(_configurations.X);
-            }
-            else if(button == GamepadButtonFlags.Y)
-            {
-                _inputSimulator.Keyboard.KeyPress(_configurations.Y);
-            }
-            else if(button == GamepadButtonFlags.B)
-            {
-                _inputSimulator.Keyboard.KeyPress(_configurations.B);
-            }
-            else if(button == GamepadButtonFlags.A)
-            {
-                _inputSimulator.Keyboard.KeyPress(_configurations.A);
-            }
+            var keyboard = _inputSimulator.Keyboard;
 
-            else if(button == GamepadButtonFlags.DPadUp)
-            {
-                _inputSimulator.Keyboard.KeyPress(_configurations.DPadUp);
-            }
-            else if(button == GamepadButtonFlags.DPadDown)
-            {
-                _inputSimulator.Keyboard.KeyPress(_configurations.DPadDown);
-            }
-            else if(button == GamepadButtonFlags.DPadLeft)
-            {
-                _inputSimulator.Keyboard.KeyPress(_configurations.DPadLeft);
-            }
-            else if(button == GamepadButtonFlags.DPadRight)
-            {
-                _inputSimulator.Keyboard.KeyPress(_configurations.DPadRight);
-            }
+            if (button == GamepadButtonFlags.X) keyboard.KeyPress(_configurations.X);
+            else if (button == GamepadButtonFlags.Y) keyboard.KeyPress(_configurations.Y);
+            else if (button == GamepadButtonFlags.B) keyboard.KeyPress(_configurations.B);
+            else if (button == GamepadButtonFlags.A) keyboard.KeyPress(_configurations.A);
+            else if (button == GamepadButtonFlags.DPadUp) keyboard.KeyPress(_configurations.DPadUp);
+            else if (button == GamepadButtonFlags.DPadDown) keyboard.KeyPress(_configurations.DPadDown);
+            else if (button == GamepadButtonFlags.DPadLeft) keyboard.KeyPress(_configurations.DPadLeft);
+            else if (button == GamepadButtonFlags.DPadRight) keyboard.KeyPress(_configurations.DPadRight);
         }
     }
 }

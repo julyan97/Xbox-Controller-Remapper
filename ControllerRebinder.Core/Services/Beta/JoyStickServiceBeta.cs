@@ -69,7 +69,7 @@ namespace ControllerRebinder.Core.Services.Beta
 
             Console.WriteLine($"X (left-right):{leftStickX} : Y (up-down):{leftStickY}\nstatic:{StaticYArea} : X:{_currentXArea}\n");
 
-            if(CircleHelper.isInDeadZone(leftStickX, leftStickY, deadZone))
+            if(CircleHelper.IsInDeadZone(leftStickX, leftStickY, deadZone))
             {
                 await controlls.ReleaseAll(_inputSimulator);
 
@@ -96,11 +96,11 @@ namespace ControllerRebinder.Core.Services.Beta
                 out currentXArea,
                 _configuration);//use to determin position in the quadrant
 
-            List<ZoneRange> zones = CircleHelper.InitCurrentZonezForQuadrant(currentXArea, ref _currentQuadrant, ref _currentZone, ref _prevZone, ref InitZones);
+            List<ZoneRange> zones = CircleHelper.InitCurrentZonesForQuadrant(currentXArea, ref _currentQuadrant, ref _currentZone, ref _prevZone, ref InitZones);
 
             Console.WriteLine($"Zones:  {_currentZone.Left},{_currentZone.Right} :  {_prevZone.Left},{_prevZone.Right}");
 
-            if(CircleHelper.isInDeadZone(leftStickX, leftStickY, deadZone))
+            if(CircleHelper.IsInDeadZone(leftStickX, leftStickY, deadZone))
             {
 
                 var shouldRelease = _prevZone.Buttons;
