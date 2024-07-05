@@ -50,7 +50,7 @@ namespace ControllerRebinder.Core
             QuadrantCache.Init();
         }
 
-        public async Task Start()
+        private async Task ManageConnection()
         {
             while (true)
             {
@@ -60,18 +60,23 @@ namespace ControllerRebinder.Core
 
                     if (ConfigCache.Configurations.LeftJoyStick.On)
                     {
-                        _ = _leftJoyStickService.Start();
+                        await _leftJoyStickService.Start();
                     }
                     if (ConfigCache.Configurations.RightJoyStick.On)
                     {
-                        _ = _rightJoyStickService.Start();
+                        await _rightJoyStickService.Start();
                     }
                     if (ConfigCache.Configurations.Buttons.On)
                     {
-                        _ = _buttonsService.Start();
+                        await _buttonsService.Start();
                     }
 
-                    break; // Exit the loop once the controller is connected and services are started
+                    while (_controller.IsConnected)
+                    {
+                        await Task.Delay(1000); // Check the connection status every second
+                    }
+
+                    _logger.LogWarning("Controller disconnected. Attempting to reconnect...");
                 }
                 else
                 {
@@ -80,7 +85,11 @@ namespace ControllerRebinder.Core
 
                 await Task.Delay(1000); // Wait for 1 second before retrying
             }
+        }
 
+        public async Task Start()
+        {
+            await ManageConnection();
             await Task.Run(() => Console.ReadLine());
         }
     }

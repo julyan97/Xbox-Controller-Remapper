@@ -59,12 +59,15 @@ public class JoyStickService : IJoyStickService
 
     private void CheckJoystickState(object state)
     {
-        var controllerState = _controller.GetState();
-        short stickX = 0;
-        short stickY = 0;
+        HandleException(() =>
+        {
+            var controllerState = _controller.GetState();
+            short stickX = 0;
+            short stickY = 0;
 
-        ChooseJoyStick(controllerState, ref stickX, ref stickY);
-        OnJoyStickMoved(stickX, stickY);
+            ChooseJoyStick(controllerState, ref stickX, ref stickY);
+            OnJoyStickMoved(stickX, stickY);
+        });
     }
 
     private void ChooseJoyStick(State state, ref short stickX, ref short stickY)
@@ -85,5 +88,14 @@ public class JoyStickService : IJoyStickService
     protected virtual void OnJoyStickMoved(int stickX, int stickY)
     {
         JoyStickMoved?.Invoke(this, new JoyStickEventArgs(stickX, stickY));
+    }
+
+    public void HandleException(Action action)
+    {
+        try
+        {
+            action();
+        }
+        catch { }
     }
 }
