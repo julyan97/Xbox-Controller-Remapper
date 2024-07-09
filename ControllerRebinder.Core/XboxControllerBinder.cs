@@ -19,8 +19,6 @@ namespace ControllerRebinder.Core
         private readonly IJoyStickService _leftJoyStickService;
         private readonly IJoyStickService _rightJoyStickService;
         private readonly IButtonsService _buttonsService;
-        private readonly JoyStickHandler _leftJoyStickHandler;
-        private readonly JoyStickHandler _rightJoyStickHandler;
 
         public XboxControllerBinder(Controller controller, InputSimulator inputSimulator, ILogger<XboxControllerBinder> logger)
         {
@@ -36,15 +34,15 @@ namespace ControllerRebinder.Core
             _buttonsService = new ButtonsService(controller, inputSimulator, ConfigCache.Configurations.Buttons, ConfigCache.Configurations.Log);
 
             // Instantiate handlers
-            _leftJoyStickHandler = new JoyStickHandler(inputSimulator, logger);
-            _rightJoyStickHandler = new JoyStickHandler(inputSimulator, logger);
+            var leftJoyStickHandler = new JoyStickHandler(inputSimulator, logger);
+            var rightJoyStickHandler = new JoyStickHandler(inputSimulator, logger);
 
             // Subscribe handlers to joystick services
-            _leftJoyStickHandler.Subscribe((JoyStickService)_leftJoyStickService);
-            _rightJoyStickHandler.Subscribe((JoyStickService)_rightJoyStickService);
+            leftJoyStickHandler.Subscribe((JoyStickService)_leftJoyStickService);
+            rightJoyStickHandler.Subscribe((JoyStickService)_rightJoyStickService);
         }
 
-        private void InitCaches()
+        private static void InitCaches()
         {
             ConfigCache.Init();
             QuadrantCache.Init();
@@ -52,45 +50,26 @@ namespace ControllerRebinder.Core
 
         private async Task ManageConnection()
         {
-            while (true)
+            if (ConfigCache.Configurations.LeftJoyStick.On)
             {
-                if (_controller.IsConnected)
-                {
-                    _logger.LogInformation("Controller connected.");
+                _leftJoyStickService.Start();
+            }
 
-                    if (ConfigCache.Configurations.LeftJoyStick.On)
-                    {
-                        await _leftJoyStickService.Start();
-                    }
-                    if (ConfigCache.Configurations.RightJoyStick.On)
-                    {
-                        await _rightJoyStickService.Start();
-                    }
-                    if (ConfigCache.Configurations.Buttons.On)
-                    {
-                        await _buttonsService.Start();
-                    }
+            if (ConfigCache.Configurations.RightJoyStick.On)
+            {
+                _rightJoyStickService.Start();
+            }
 
-                    while (_controller.IsConnected)
-                    {
-                        await Task.Delay(1000); // Check the connection status every second
-                    }
-
-                    _logger.LogWarning("Controller disconnected. Attempting to reconnect...");
-                }
-                else
-                {
-                    _logger.LogWarning("Controller not connected. Attempting to reconnect...");
-                }
-
-                await Task.Delay(1000); // Wait for 1 second before retrying
+            if (ConfigCache.Configurations.Buttons.On)
+            {
+                _buttonsService.Start();
             }
         }
 
         public async Task Start()
         {
             await ManageConnection();
-            await Task.Run(() => Console.ReadLine());
+            await Task.Run(Console.ReadLine);
         }
     }
 }
