@@ -6,6 +6,7 @@
     <ImplicitUsings>disable</ImplicitUsings>
     <Nullable>disable</Nullable>
     <ApplicationIcon>download.ico</ApplicationIcon>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
