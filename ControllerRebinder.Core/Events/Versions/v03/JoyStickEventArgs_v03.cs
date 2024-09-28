@@ -2,29 +2,30 @@
 using ControllerRebinder.Common.Moddels.Configurations.SubModelsOfConfigurations;
 using ControllerRebinder.Core.Caches;
 using ControllerRebinder.Core.Helpers;
-using ControllerRebinder.Core.Services;
+using ControllerRebinder.Core.Services.v03;
 using Microsoft.Extensions.Logging;
 using System;
 using WindowsInput;
 
-namespace ControllerRebinder.Core.Events;
-public class JoyStickEventArgs : EventArgs
+namespace ControllerRebinder.Core.Events.Versions.v03;
+public class JoyStickEventArgs_v03 : EventArgs
 {
     public int StickX { get; }
     public int StickY { get; }
 
-    public JoyStickEventArgs(int stickX, int stickY)
+    public JoyStickEventArgs_v03(int stickX, int stickY)
     {
         StickX = stickX;
         StickY = stickY;
     }
 }
 
-public delegate void JoyStickEventHandler(object sender, JoyStickEventArgs e);
+public delegate void JoyStickEventHandler_v03(object sender, JoyStickEventArgs_v03 e);
 
 
-public class JoyStickHandler
+public class JoyStickHandler_v03
 {
+    private const string Version = "3.0";
     private readonly InputSimulator _inputSimulator;
     private readonly ILogger _logger;
     private double _staticYArea;
@@ -33,18 +34,18 @@ public class JoyStickHandler
 
     private const int AreaMultiplier = 10_000_000;
 
-    public JoyStickHandler(InputSimulator inputSimulator, ILogger logger)
+    public JoyStickHandler_v03(InputSimulator inputSimulator, ILogger logger)
     {
         _inputSimulator = inputSimulator;
         _logger = logger;
     }
 
-    public void Subscribe(JoyStickService joyStickService)
+    public void Subscribe(JoyStickService_v03 joyStickService)
     {
         joyStickService.JoyStickMoved += OnJoyStickMoved;
     }
 
-    private async void OnJoyStickMoved(object sender, JoyStickEventArgs e)
+    private async void OnJoyStickMoved(object sender, JoyStickEventArgs_v03 e)
     {
         var config = ConfigCache.Configurations.LeftJoyStick;
         double upDown = config.ForwardDown * AreaMultiplier;
@@ -57,7 +58,7 @@ public class JoyStickHandler
 
         if (CircleHelper.IsInDeadZone(e.StickX, e.StickY, deadZone, _logger))
         {
-            await controlls.ReleaseAll(_inputSimulator).ConfigureAwait(false);
+            await controlls.ReleaseAll_v03(_inputSimulator).ConfigureAwait(false);
         }
         else
         {
@@ -78,7 +79,7 @@ public class JoyStickHandler
         if (ConfigCache.Configurations.Log)
         {
             ConsoleHelper.ClearConsole();
-            _logger.LogInformation("Version 3.0\n");
+            _logger.LogInformation($"Version {Version}\n");
             _logger.LogInformation($"X (left-right): {stickX} : Y (up-down): {stickY}\n");
             _logger.LogInformation($"Static: {_staticYArea} : X: {_currentXArea}\n");
         }

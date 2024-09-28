@@ -1,7 +1,7 @@
 ﻿using ControllerRebinder.Common.Enumerations;
 using ControllerRebinder.Common.Moddels.Configurations.SubModelsOfConfigurations;
 using ControllerRebinder.Core.Caches;
-using ControllerRebinder.Core.Events;
+using ControllerRebinder.Core.Events.Versions.v03;
 using ControllerRebinder.Core.Helpers;
 using ControllerRebinder.Core.Services.Imp;
 using DXNET.XInput;
@@ -11,9 +11,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using WindowsInput;
 
-namespace ControllerRebinder.Core.Services;
+namespace ControllerRebinder.Core.Services.v03;
 
-public class JoyStickService : IJoyStickService
+public class JoyStickService_v03 : IJoyStickService
 {
     private readonly Controller _controller;
     private readonly InputSimulator _inputSimulator;
@@ -28,9 +28,9 @@ public class JoyStickService : IJoyStickService
     private const int ThresholdMultiplier = 100;
     private const int AreaMultiplier = 10_000_000;
 
-    public event JoyStickEventHandler JoyStickMoved;
+    public event JoyStickEventHandler_v03 JoyStickMoved;
 
-    public JoyStickService(
+    public JoyStickService_v03(
         Controller controller,
         InputSimulator inputSimulator,
         JoyStick joyStick,
@@ -87,7 +87,7 @@ public class JoyStickService : IJoyStickService
 
     protected virtual void OnJoyStickMoved(int stickX, int stickY)
     {
-        JoyStickMoved?.Invoke(this, new JoyStickEventArgs(stickX, stickY));
+        JoyStickMoved?.Invoke(this, new JoyStickEventArgs_v03(stickX, stickY));
     }
 
     public void HandleException(Action action)

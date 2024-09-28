@@ -1,11 +1,12 @@
 ﻿using ControllerRebinder.Common.Enumerations;
 using ControllerRebinder.Core.Caches;
-using ControllerRebinder.Core.Events;
+using ControllerRebinder.Core.Events.Versions.v04;
 using ControllerRebinder.Core.Services;
-using ControllerRebinder.Core.Services.Imp; // Add this line to include the handler namespace
+using ControllerRebinder.Core.Services.Imp;
 using DXNET.XInput;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using WindowsInput;
 
@@ -29,17 +30,17 @@ namespace ControllerRebinder.Core
             _logger = logger;
 
             // Instantiate services from configurations
-            _leftJoyStickService = new JoyStickService(controller, inputSimulator, JoyStick.Left, logger);
-            _rightJoyStickService = new JoyStickService(controller, inputSimulator, JoyStick.Right, logger);
+            _leftJoyStickService = new JoyStickService_v04(controller, inputSimulator, JoyStick.Left, logger);
+            _rightJoyStickService = new JoyStickService_v04(controller, inputSimulator, JoyStick.Right, logger);
             _buttonsService = new ButtonsService(controller, inputSimulator, ConfigCache.Configurations.Buttons, ConfigCache.Configurations.Log);
 
             // Instantiate handlers
-            var leftJoyStickHandler = new JoyStickHandler(inputSimulator, logger);
-            var rightJoyStickHandler = new JoyStickHandler(inputSimulator, logger);
+            var leftJoyStickHandler = new JoyStickHandler_v04(inputSimulator, logger);
+            var rightJoyStickHandler = new JoyStickHandler_v04(inputSimulator, logger);
 
             // Subscribe handlers to joystick services
-            leftJoyStickHandler.Subscribe((JoyStickService)_leftJoyStickService);
-            rightJoyStickHandler.Subscribe((JoyStickService)_rightJoyStickService);
+            leftJoyStickHandler.Subscribe((JoyStickService_v04)_leftJoyStickService);
+            rightJoyStickHandler.Subscribe((JoyStickService_v04)_rightJoyStickService);
         }
 
         private static void InitCaches()
@@ -48,28 +49,32 @@ namespace ControllerRebinder.Core
             QuadrantCache.Init();
         }
 
-        private async Task ManageConnection()
+        private void ManageConnection()
         {
+            var tasks = new List<Task>();
+
             if (ConfigCache.Configurations.LeftJoyStick.On)
             {
-                _leftJoyStickService.Start();
+                tasks.Add(_leftJoyStickService.Start());
             }
 
             if (ConfigCache.Configurations.RightJoyStick.On)
             {
-                _rightJoyStickService.Start();
+                tasks.Add(_rightJoyStickService.Start());
             }
 
             if (ConfigCache.Configurations.Buttons.On)
             {
-                _buttonsService.Start();
+                tasks.Add(_buttonsService.Start());
             }
+
+            Task.WhenAll(tasks).ConfigureAwait(false).GetAwaiter().GetResult();
         }
 
-        public async Task Start()
+        public void Start()
         {
-            await ManageConnection();
-            await Task.Run(Console.ReadLine);
+            ManageConnection();
+            Console.ReadLine();
         }
     }
 }

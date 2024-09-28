@@ -71,7 +71,7 @@ namespace ControllerRebinder.Core.Services.Beta
 
             if(CircleHelper.IsInDeadZone(leftStickX, leftStickY, deadZone))
             {
-                await controlls.ReleaseAll(_inputSimulator);
+                await controlls.ReleaseAll_v03(_inputSimulator);
 
             }
             else
