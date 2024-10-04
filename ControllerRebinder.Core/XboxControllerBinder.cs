@@ -49,7 +49,7 @@ namespace ControllerRebinder.Core
             QuadrantCache.Init();
         }
 
-        private void ManageConnection()
+        private async Task ManageConnection()
         {
             var tasks = new List<Task>();
 
@@ -68,12 +68,12 @@ namespace ControllerRebinder.Core
                 tasks.Add(_buttonsService.Start());
             }
 
-            Task.WhenAll(tasks).ConfigureAwait(false).GetAwaiter().GetResult();
+            await Task.WhenAll(tasks).ConfigureAwait(false);
         }
 
-        public void Start()
+        public async Task Start()
         {
-            ManageConnection();
+            await ManageConnection();
             Console.ReadLine();
         }
     }

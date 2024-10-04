@@ -19,7 +19,7 @@ public class Program
         try
         {
             var controllerRebinder = serviceProvider.Services.GetService<XboxControllerBinder>();
-            controllerRebinder.Start();
+            await controllerRebinder.Start().ConfigureAwait(false);
         }
         catch (Exception ex)
         {
