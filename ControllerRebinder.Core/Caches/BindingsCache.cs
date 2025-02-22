@@ -13,9 +13,6 @@ namespace ControllerRebinder.Core.Caches
         public static void Init()
         {
             LeftStickBindings = new Dictionary<(Quadrant, Zone), List<VirtualKeyCode>>();
-
-            LeftStickBindings.Add((Quadrant.TopLeft, Zone.Upper), new List<VirtualKeyCode>());
-            LeftStickBindings.Add((Quadrant.TopLeft, Zone.Upper), new List<VirtualKeyCode>());
             LeftStickBindings.Add((Quadrant.TopLeft, Zone.Upper), new List<VirtualKeyCode>());
         }
 

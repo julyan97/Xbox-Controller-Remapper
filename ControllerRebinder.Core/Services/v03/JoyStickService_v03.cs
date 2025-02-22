@@ -41,11 +41,10 @@ public class JoyStickService_v03 : IJoyStickService
         _joyStick = joyStick;
         _logger = logger;
     }
-
-    public async Task Start()
+    
+    public async Task Start(CancellationToken cancellationToken = default)
     {
         var config = ConfigCache.Configurations.LeftJoyStick;
-
         CircleHelper.FindArea(
             config.ThreshHoldAreaCal,
             config.MaxValController,
@@ -53,10 +52,25 @@ public class JoyStickService_v03 : IJoyStickService
             out double staticYAngle,
             out _staticYArea);
 
-        _timer = new Timer(CheckJoystickState, null, 0, ConfigCache.Configurations.RefreshRate);
-
+        // Use an async loop instead of a Timer
+        while (!cancellationToken.IsCancellationRequested)
+        {
+            try
+            {
+                var controllerState = _controller.GetState();
+                short stickX = 0, stickY = 0;
+                ChooseJoyStick(controllerState, ref stickX, ref stickY);
+                OnJoyStickMoved(stickX, stickY);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while processing joystick state.");
+            }
+        
+            await Task.Delay(ConfigCache.Configurations.RefreshRate, cancellationToken);
+        }
     }
-
+    
     private void CheckJoystickState(object state)
     {
         HandleException(() =>
@@ -98,4 +112,6 @@ public class JoyStickService_v03 : IJoyStickService
         }
         catch { }
     }
+
+
 }

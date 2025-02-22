@@ -1,4 +1,5 @@
 ﻿using ControllerRebinder.Core;
+using ControllerRebinder.TesterConsole.HostedServices;
 using DXNET.XInput;
 using Microsoft.Extensions.DependencyInjection;
 using WindowsInput;
@@ -12,7 +13,8 @@ namespace ControllerRebinder.TesterConsole
             services
                    .AddSingleton<Controller>(new Controller(UserIndex.One))
                    .AddSingleton<InputSimulator>()
-                   .AddTransient<XboxControllerBinder>();
+                   .AddTransient<XboxControllerBinder>()
+                   .AddHostedService<XboxControllerBinderService>(); 
 
         }
     }

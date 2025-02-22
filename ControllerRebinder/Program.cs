@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using ControllerRebinder.Core;
 using ControllerRebinder.Core.Caches;
@@ -12,20 +13,41 @@ public class Program
 {
     static async Task Main(string[] args)
     {
-        ConfigCache.Init();
-        var serviceProvider = CreateHostBuilder(args).Build();
-
-        Start:
+        // Initialize configuration
         try
         {
-            var controllerRebinder = serviceProvider.Services.GetService<XboxControllerBinder>();
-            await controllerRebinder.Start().ConfigureAwait(false);
+            await ConfigCache.InitAsync();
         }
         catch (Exception ex)
         {
-            goto Start;
+            Console.WriteLine($"Error loading configuration: {ex.Message}");
+            return;
+        }
+    
+        var host = CreateHostBuilder(args).Build();
+        var serviceProvider = host.Services;
+
+        // Use cancellation token for graceful shutdown
+        using var cts = new CancellationTokenSource();
+        Console.CancelKeyPress += (s, e) =>
+        {
+            e.Cancel = true;
+            cts.Cancel();
+        };
+
+        // Use GetRequiredService to ensure the service is available
+        var controllerRebinder = serviceProvider.GetRequiredService<XboxControllerBinder>();
+
+        try
+        {
+            await controllerRebinder.Start(cts.Token).ConfigureAwait(false);
+        }
+        catch (OperationCanceledException)
+        {
+            // Expected on cancellation; log or handle as needed
         }
     }
+
 
     static IHostBuilder CreateHostBuilder(string[] args) =>
         Host.CreateDefaultBuilder(args)

@@ -3,6 +3,7 @@ using ControllerRebinder.Core.Caches;
 using ControllerRebinder.Core.Helpers;
 using DXNET.XInput;
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using WindowsInput;
 
@@ -23,21 +24,23 @@ namespace ControllerRebinder.Core.Services.Imp
             _log = log;
         }
 
-        public async Task Start()
+        public async Task Start(CancellationToken cancellationToken)
         {
-            while (true)
+            while (!cancellationToken.IsCancellationRequested)
             {
                 var state = _controller.GetState();
                 var button = state.Gamepad.Buttons;
+
                 if (_log)
                 {
                     Log(button);
                 }
 
-                await ExecuteButtonPress(button);
-                await Task.Delay(ConfigCache.Configurations.RefreshRate);
+                await ExecuteButtonPress(button).ConfigureAwait(false);
+                await Task.Delay(ConfigCache.Configurations.RefreshRate, cancellationToken);
             }
         }
+
 
         private void Log(GamepadButtonFlags button)
         {

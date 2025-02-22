@@ -13,13 +13,13 @@ namespace ControllerRebinder.Core.Helpers
 
         public static async Task ReleaseKeysInQuadrantCache()
         {
-            foreach(var ranges in QuadrantCache.Quadrants.Values)
+            foreach (var ranges in QuadrantCache.Quadrants.Values)
             {
-                foreach(var range in ranges)
+                foreach (var range in ranges)
                 {
                     await Task.Run(() =>
                     {
-                        foreach(var button in range.Buttons)
+                        foreach (var button in range.Buttons)
                         {
                             _inputSimulator.Keyboard.KeyUp(button);
                         }
@@ -31,24 +31,20 @@ namespace ControllerRebinder.Core.Helpers
         public static async Task PressButtons(List<VirtualKeyCode> buttons)
         {
             await Task.Run(() =>
-             {
-                 foreach(var button in buttons)
-                 {
-                     _inputSimulator.Keyboard.KeyDown(button);
-                 }
-             });
-
-        }
-
-        public static async Task ReleaseButtons(List<VirtualKeyCode> buttons)
-        {
-            await Task.Run(() =>
             {
-                foreach(var button in buttons)
+                foreach (var button in buttons)
                 {
-                    _inputSimulator.Keyboard.KeyUp(button);
+                    _inputSimulator.Keyboard.KeyDown(button);
                 }
             });
+        }
+
+        public static void ReleaseButtons(List<VirtualKeyCode> buttons)
+        {
+            foreach (var button in buttons)
+            {
+                _inputSimulator.Keyboard.KeyUp(button);
+            }
         }
     }
 }

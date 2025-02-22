@@ -7,6 +7,7 @@ using DXNET.XInput;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using WindowsInput;
 
@@ -23,7 +24,7 @@ namespace ControllerRebinder.Core
 
         public XboxControllerBinder(Controller controller, InputSimulator inputSimulator, ILogger<XboxControllerBinder> logger)
         {
-            InitCaches();
+            InitCachesAsync().GetAwaiter().GetResult();
 
             _controller = controller;
             _inputSimulator = inputSimulator;
@@ -43,9 +44,9 @@ namespace ControllerRebinder.Core
             rightJoyStickHandler.Subscribe((JoyStickService_v04)_rightJoyStickService);
         }
 
-        private static void InitCaches()
+        private static async Task InitCachesAsync()
         {
-            ConfigCache.Init();
+            await ConfigCache.InitAsync();
             QuadrantCache.Init();
         }
 
@@ -71,7 +72,7 @@ namespace ControllerRebinder.Core
             await Task.WhenAll(tasks).ConfigureAwait(false);
         }
 
-        public async Task Start()
+        public async Task Start(CancellationToken cancellationToken = default)
         {
             await ManageConnection();
             Console.ReadLine();

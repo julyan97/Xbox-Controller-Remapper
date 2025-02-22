@@ -39,7 +39,7 @@ namespace ControllerRebinder.Core.Services
             _logger = logger;
         }
 
-        public async Task Start()
+        public async Task Start( CancellationToken cancellationToken = default)
         {
             var config = ConfigCache.Configurations.LeftJoyStick;
 

@@ -106,7 +106,7 @@ namespace ControllerRebinder.Core.Services.Beta
                 var shouldRelease = _prevZone.Buttons;
                 if(shouldRelease != releasedButtons)
                 {
-                    await ButtonHelper.ReleaseButtons(shouldRelease);
+                    ButtonHelper.ReleaseButtons(shouldRelease);
                 }
                 releasedButtons = shouldRelease;
             }
@@ -114,8 +114,8 @@ namespace ControllerRebinder.Core.Services.Beta
             {
                 var shouldRelease = _prevZone.Buttons.Where(x => !_currentZone.Buttons.Contains(x)).ToList();
                 if(shouldRelease != releasedButtons)
-                {
-                    await ButtonHelper.ReleaseButtons(shouldRelease);
+                { 
+                    ButtonHelper.ReleaseButtons(shouldRelease);
                 }
                 releasedButtons = shouldRelease;
                 _didZoneChange = false;

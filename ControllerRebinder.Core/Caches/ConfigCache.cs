@@ -1,4 +1,5 @@
-﻿using ControllerRebinder.Common.Moddels.Configurations;
+﻿using System;
+using ControllerRebinder.Common.Moddels.Configurations;
 using Newtonsoft.Json;
 using System.IO;
 using System.Threading;
@@ -11,14 +12,20 @@ namespace ControllerRebinder.Core.Caches
         private const string PATH = "Configurations.json";
         public static Configurations Configurations { get; set; }
 
-        public static void Init()
+        public static async Task InitAsync()
         {
-            var configurations = File.ReadAllText(PATH);
-            Configurations = JsonConvert.DeserializeObject<Configurations>(configurations);
-
-            // var test = JsonConvert.SerializeObject(Configurations, Formatting.Indented);
-            // File.WriteAllText("./test", test);
+            try
+            {
+                var configurations = await File.ReadAllTextAsync(PATH).ConfigureAwait(false);
+                Configurations = JsonConvert.DeserializeObject<Configurations>(configurations);
+            }
+            catch (Exception ex)
+            {
+                // Log or handle the exception as needed
+                throw new Exception("Failed to initialize configuration.", ex);
+            }
         }
+
 
         public static async Task Refresh()
         {
